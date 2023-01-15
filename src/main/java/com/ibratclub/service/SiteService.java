@@ -5,6 +5,7 @@ import com.ibratclub.dto.RequestDTO;
 import com.ibratclub.model.Request;
 import com.ibratclub.model.User;
 import com.ibratclub.model.enums.RegisteredType;
+import com.ibratclub.repository.RequestRepository;
 import com.ibratclub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
