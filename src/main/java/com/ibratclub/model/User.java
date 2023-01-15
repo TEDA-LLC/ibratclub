@@ -2,7 +2,9 @@ package com.ibratclub.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ibratclub.model.enums.Gender;
 import com.ibratclub.model.enums.Language;
+import com.ibratclub.model.enums.State;
 import jakarta.persistence.*;
 import lombok.*;
 
