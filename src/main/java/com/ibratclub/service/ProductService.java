@@ -2,8 +2,10 @@ package com.ibratclub.service;
 
 import com.ibratclub.dto.ApiResponse;
 import com.ibratclub.dto.ProductDTO;
+import com.ibratclub.model.Attachment;
 import com.ibratclub.model.Category;
 import com.ibratclub.model.Product;
+import com.ibratclub.repository.AttachmentRepository;
 import com.ibratclub.repository.CategoryRepository;
 import com.ibratclub.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
