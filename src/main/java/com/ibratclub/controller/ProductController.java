@@ -2,6 +2,8 @@ package com.ibratclub.controller;
 
 import com.ibratclub.dto.ApiResponse;
 import com.ibratclub.dto.ProductDTO;
+import com.ibratclub.model.Product;
+import com.ibratclub.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
