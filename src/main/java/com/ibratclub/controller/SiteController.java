@@ -5,6 +5,7 @@ import com.ibratclub.dto.RequestDTO;
 import com.ibratclub.dto.ReviewDTO;
 import com.ibratclub.model.Request;
 import com.ibratclub.model.Review;
+import com.ibratclub.model.SiteHistory;
 import com.ibratclub.model.User;
 import com.ibratclub.service.SiteService;
 import lombok.RequiredArgsConstructor;
