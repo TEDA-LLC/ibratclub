@@ -1,6 +1,8 @@
 package com.ibratclub.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ibratclub.model.enums.RegisteredType;
+import com.ibratclub.model.enums.RequestType;
 import jakarta.persistence.*;
 import lombok.*;
 
