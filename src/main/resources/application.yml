@@ -2,9 +2,8 @@ server:
   port: 7788
   ssl:
     enabled: false
-    key-store: /etc/letsencrypt/live/api.teda.uz/keystore.p12
-    key-store-type: PKCS12
-    key-store-password: turgun1970
+    certificate: /etc/letsencrypt/live/api.teda.uz/fullchain.pem
+    certificate-private-key: /etc/letsencrypt/live/api.teda.uz/privkey.pem
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/ibrat_club
@@ -31,3 +30,5 @@ telegram:
     username: ibratclub_bot
     token: 5927728152:AAExhfEpagD__0D9A6b_qJs56SuXV06oZ-8
     id: 1
+page:
+  size: 20
