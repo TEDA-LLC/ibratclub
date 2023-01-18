@@ -45,8 +45,8 @@ public class DataLoader implements CommandLineRunner {
             Bot bot2 = new Bot();
             bot2.setUsername("ibratclub_bot");
             bot2.setToken("5927728152:AAExhfEpagD__0D9A6b_qJs56SuXV06oZ-8");
-            botRepository.save(bot);
-            botRepository.save(bot1);
+//            botRepository.save(bot);
+//            botRepository.save(bot1);
             botRepository.save(bot2);
         }
     }
