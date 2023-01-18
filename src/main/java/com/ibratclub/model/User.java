@@ -6,9 +6,11 @@ import com.ibratclub.model.enums.Gender;
 import com.ibratclub.model.enums.Language;
 import com.ibratclub.model.enums.RegisteredType;
 import com.ibratclub.model.enums.State;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
+import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -48,9 +50,13 @@ public class User {
     private Avatar avatar;
     @ManyToOne
     private Company company;
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Bot bot;
     private int count = 0;
+    @JsonFormat(pattern = "dd.MM.yyyy")
+    private LocalDate brithDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime registeredTime = LocalDateTime.now();
     @JsonIgnore
