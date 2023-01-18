@@ -1,6 +1,6 @@
 package com.ibratclub.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 /**

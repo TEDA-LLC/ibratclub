@@ -1,7 +1,7 @@
 package com.ibratclub.model;
 
 import com.ibratclub.model.enums.PaymentType;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;

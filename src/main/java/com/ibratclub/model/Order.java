@@ -2,7 +2,7 @@ package com.ibratclub.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ibratclub.model.enums.OrderType;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
