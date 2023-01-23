@@ -25,7 +25,7 @@ public class VacancyService {
         if (vacancies.isEmpty()) {
             return ApiResponse.<List<Vacancy>>builder().
                     message("Not Found").
-                    status(200).
+                    status(400).
                     success(false).
                     build();
         } else {

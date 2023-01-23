@@ -25,7 +25,7 @@ public class EventService {
         if (events.isEmpty()) {
             return ApiResponse.<List<Event>>builder().
                     message("Not Found").
-                    status(200).
+                    status(400).
                     success(false).
                     build();
         } else {
