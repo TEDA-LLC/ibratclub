@@ -35,4 +35,6 @@ public class Event {
     @ManyToOne
     private Address eventAddress;
 
+    private boolean active;
+
 }

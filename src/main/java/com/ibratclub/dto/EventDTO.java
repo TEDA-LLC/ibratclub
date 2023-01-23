@@ -21,4 +21,6 @@ public class EventDTO {
 
     private Address eventAddress;
 
+    private boolean active = true;
+
 }
