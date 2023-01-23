@@ -122,13 +122,6 @@ public class EventService {
         event.setDateTime(eventDTO.getDateTime());
         event.setEventAddress(eventDTO.getEventAddress());
         event.setActive(eventDTO.isActive());
-//        event.setDescriptionUz(productDTO.getNameUz());
-//        event.setDescriptionRu(productDTO.getDescriptionRu());
-//        event.setDescriptionEn(productDTO.getDescriptionEn());
-//        event.setPrice(productDTO.getPrice());
-//        event.setCategory(optionalCategory.get());
-//        event.setAttachment(attachment);
-
         eventRepository.save(event);
 
         return ApiResponse.builder().
