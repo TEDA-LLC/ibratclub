@@ -1,6 +1,8 @@
 package com.ibratclub.model;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.util.List;
@@ -22,7 +24,9 @@ public class Bot {
     private Long id;
     @Column(unique = true, nullable = false)
     private String token, username;
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Company company;
     @OneToMany(mappedBy = "bot")
     @ToString.Exclude

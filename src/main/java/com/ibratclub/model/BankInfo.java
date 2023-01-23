@@ -1,9 +1,8 @@
 package com.ibratclub.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 /**
@@ -32,5 +31,9 @@ public class BankInfo {
     private Integer accountNumber;
 
     private String currency;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Company company;
 
 }
