@@ -19,7 +19,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(columnDefinition = "text")
     private String nameUz, nameRu, nameEn, descriptionUz, descriptionRu, descriptionEn;
 
     @ManyToOne
