@@ -25,7 +25,9 @@ public class Avatar {
     @ToString.Exclude
     @JsonIgnore
     private List<Attachment> photos;
-    @OneToOne
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private User user;
     private String personal;
     private String  aboutWork;

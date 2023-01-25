@@ -1,6 +1,7 @@
 package com.ibratclub.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ibratclub.model.enums.ActiveTypes;
 import javax.persistence.*;
 import lombok.*;
@@ -25,7 +26,9 @@ public class ActivityStatus {
     private ActiveTypes secondCase;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime period = LocalDateTime.now();
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private User client;
 
 }

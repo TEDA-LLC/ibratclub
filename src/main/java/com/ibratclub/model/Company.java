@@ -29,8 +29,9 @@ public class Company {
     private String memberOrganization;
     @ManyToOne(cascade = CascadeType.ALL)
     private Address address;
-    @ManyToOne(cascade = CascadeType.ALL)
-    private BankInfo bankInfo;
+    @OneToMany(mappedBy = "company")
+    @ToString.Exclude
+    private List<BankInfo> bankInfo;
     @ManyToOne
     private Employee director;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
