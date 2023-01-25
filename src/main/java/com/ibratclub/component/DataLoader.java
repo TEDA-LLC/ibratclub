@@ -24,18 +24,7 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (mode.equals("always")) {
-            Category service = Category.builder()
-                    .nameUz("Xizmatlar \uD83D\uDEE0")
-                    .nameRu("Услуги \uD83D\uDEE0")
-                    .nameEn("Services \uD83D\uDEE0")
-                    .build();
-            Category system = Category.builder()
-                    .nameUz("Tadbirlar \uD83D\uDCBB")
-                    .nameRu("Выставки \uD83D\uDCBB")
-                    .nameEn("Events \uD83D\uDCBB")
-                    .build();
-            categoryRepository.save(service);
-            categoryRepository.save(system);
+
 //            Bot bot = new Bot();
 //            bot.setToken("5432072116:AAHHjQHDP-IBzzQdiRyzHhqValr5tKQ6tlI");
 //            bot.setUsername("tedauz_bot");
@@ -47,7 +36,21 @@ public class DataLoader implements CommandLineRunner {
             bot2.setToken("5927728152:AAExhfEpagD__0D9A6b_qJs56SuXV06oZ-8");
 //            botRepository.save(bot);
 //            botRepository.save(bot1);
-            botRepository.save(bot2);
+            Bot save = botRepository.save(bot2);
+            Category service = Category.builder()
+                    .nameUz("Xizmatlar \uD83D\uDEE0")
+                    .nameRu("Услуги \uD83D\uDEE0")
+                    .nameEn("Services \uD83D\uDEE0")
+                    .build();
+            Category system = Category.builder()
+                    .nameUz("Tadbirlar \uD83D\uDCBB")
+                    .nameRu("Выставки \uD83D\uDCBB")
+                    .nameEn("Events \uD83D\uDCBB")
+                    .build();
+            system.setBot(save);
+            service.setBot(save);
+            categoryRepository.save(service);
+            categoryRepository.save(system);
         }
     }
 
