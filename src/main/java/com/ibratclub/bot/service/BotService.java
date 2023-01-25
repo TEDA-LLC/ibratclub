@@ -45,7 +45,6 @@ public class BotService {
     private final RequestRepository requestRepository;
     private final VacancyRepository vacancyRepository;
     private final QrCodeRepository qrCodeRepository;
-
     private final BotRepository botRepository;
 
     public SendMessage start(String chatId) {
@@ -118,18 +117,18 @@ public class BotService {
 //
 //            sendMessage.setReplyMarkup(buttonService.menuButton(language));
 //            return sendMessage;
-        SendPhoto sendPhoto = new SendPhoto();
-        sendPhoto.setParseMode("HTML");
-        if (language.equals(Language.UZB))
-            sendPhoto.setCaption(ConstantUz.ABOUT_US);
-        else if (language.equals(Language.RUS))
-            sendPhoto.setCaption(ConstantRu.ABOUT_US);
-        else sendPhoto.setCaption(ConstantEn.ABOUT_US);
-        sendPhoto.setPhoto(new InputFile(new ByteArrayInputStream(bot.getLogo().getBytes()), bot.getLogo().getOriginalName()));
-        sendPhoto.setChatId(chatId);
+            SendPhoto sendPhoto = new SendPhoto();
+            sendPhoto.setParseMode("HTML");
+            if (language.equals(Language.UZB))
+                sendPhoto.setCaption(ConstantUz.ABOUT_US);
+            else if (language.equals(Language.RUS))
+                sendPhoto.setCaption(ConstantRu.ABOUT_US);
+            else sendPhoto.setCaption(ConstantEn.ABOUT_US);
+            sendPhoto.setPhoto(new InputFile(new ByteArrayInputStream(bot.getLogo().getBytes()), bot.getLogo().getOriginalName()));
+            sendPhoto.setChatId(chatId);
 
-        sendPhoto.setReplyMarkup(buttonService.menuButton(language));
-        return sendPhoto;
+            sendPhoto.setReplyMarkup(buttonService.menuButton(language));
+            return sendPhoto;
 
     }
 

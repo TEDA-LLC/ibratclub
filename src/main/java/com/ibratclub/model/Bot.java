@@ -46,5 +46,4 @@ public class Bot {
 
     @ManyToOne
     private Attachment logo;
-
 }
