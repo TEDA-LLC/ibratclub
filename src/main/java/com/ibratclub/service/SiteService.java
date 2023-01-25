@@ -110,20 +110,114 @@ public class SiteService {
     }
 
     public ApiResponse<?> historyWriter(SiteHistory history, String phone, String email) {
-        if (phone != null) {
-            Optional<User> userOptional = userRepository.findByPhone(phone);
-            if (userOptional.isPresent()) {
-                User user = userOptional.get();
-                user.setLastOperationTime(LocalDateTime.now());
-                user.setCount(user.getCount() + 1);
-                if (user.getEmail() == null) {
-                    user.setEmail(email);
+        boolean isEmail = email != null;
+        boolean isPhone = phone != null;
+        if (isEmail) {
+            isEmail = !email.equals("");
+        }
+        if (isPhone) {
+            isPhone = !phone.equals("");
+        }
+        if (isEmail && isPhone) {
+            Optional<User> userOptionalByEmail1 = userRepository.findByEmail(email);
+            Optional<User> userOptionalByPhone1 = userRepository.findByPhone(phone);
+            if (userOptionalByPhone1.isPresent() && userOptionalByEmail1.isPresent()) {
+                User userByEmail = userOptionalByEmail1.get();
+                User userByPhone = userOptionalByPhone1.get();
+                if (!userByPhone.getId().equals(userByEmail.getId())) {
+                    userByPhone.setEmail(userByEmail.getEmail());
+                    User save = userRepository.save(userByPhone);
+                    userRepository.delete(userByEmail);
+                    history.setUser(save);
+                    siteHistoryRepository.save(history);
+                    return ApiResponse.builder().
+                            message("History created !").
+                            status(201).
+                            success(true).
+                            build();
                 }
-                history.setUser(user);
-                userRepository.save(user);
+            }
+
+        }
+        if (isEmail) {
+            Optional<User> userOptionalByEmail = userRepository.findByEmail(email);
+            if (userOptionalByEmail.isPresent()) {
+                User userByEmail = userOptionalByEmail.get();
+                if (userByEmail.getPhone() == null) {
+                    userByEmail.setPhone(phone);
+                }
+                userByEmail.setCount(userByEmail.getCount() + 1);
+                User save = userRepository.save(userByEmail);
+                history.setUser(save);
+                siteHistoryRepository.save(history);
+                return ApiResponse.builder().
+                        message("History created !").
+                        status(201).
+                        success(true).
+                        build();
+            }
+        } if (isPhone) {
+            Optional<User> userOptionalByPhone = userRepository.findByPhone(phone);
+            if (userOptionalByPhone.isPresent()) {
+                User userByPhone = userOptionalByPhone.get();
+                if (userByPhone.getEmail() == null) {
+                    userByPhone.setEmail(email);
+                }
+                userByPhone.setCount(userByPhone.getCount() + 1);
+                User save = userRepository.save(userByPhone);
+                history.setUser(save);
+                siteHistoryRepository.save(history);
+                return ApiResponse.builder().
+                        message("History created !").
+                        status(201).
+                        success(true).
+                        build();
             }
         }
 
+        if (!isEmail && !isPhone)
+            return ApiResponse.<User>builder().
+                    message("Parameters are required!!!").
+                    success(false).
+                    status(400).
+                    build();
+        if (isEmail && !email.contains("@"))
+            return ApiResponse.<User>builder().
+                    message("Email type is not supported!!!").
+                    success(false).
+                    status(400).
+                    build();
+        if (isPhone) {
+            try {
+                Long.parseLong(phone.substring(1));
+            } catch (NumberFormatException e) {
+                return ApiResponse.<User>builder().
+                        message("Phone is not numeric!!!").
+                        success(false).
+                        status(400).
+                        build();
+            }
+        }
+
+        if (isPhone && !phone.startsWith("+"))
+            return ApiResponse.<User>builder().
+                    message("Phone is not numeric!!!").
+                    success(false).
+                    status(400).
+                    build();
+
+
+        User user = new User();
+        if (isEmail) {
+            user.setEmail(email);
+        }
+        if (isPhone) {
+            user.setPhone(phone);
+        }
+        user.setCount(1);
+        user.setRegisteredType(RegisteredType.WEBSITE);
+        User save = userRepository.save(user);
+        history.setUser(save);
         siteHistoryRepository.save(history);
         return ApiResponse.builder().
                 message("History created !").

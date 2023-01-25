@@ -10,6 +10,7 @@ import com.ibratclub.repository.CategoryRepository;
 import com.ibratclub.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductService {
 
+    @Value("${telegram.bot.id}")
+    private Long botId;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final AttachmentRepository attachmentRepository;
@@ -68,7 +71,7 @@ public class ProductService {
     @SneakyThrows
     public ApiResponse<?> save(ProductDTO productDTO) {
         Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
-        if (categoryOptional.isEmpty()) {
+        if (categoryOptional.isEmpty() || !categoryOptional.get().getBot().getId().equals(botId)) {
             return ApiResponse.builder().
                     message("Category not found").
                     status(204).

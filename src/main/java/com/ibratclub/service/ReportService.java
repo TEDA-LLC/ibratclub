@@ -89,5 +89,4 @@ public class ReportService {
                 success(true).
                 build();
     }
-
 }
