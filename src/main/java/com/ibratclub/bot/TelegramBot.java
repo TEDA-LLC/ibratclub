@@ -200,9 +200,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                                     user1.setChatId(user.getChatId());
                                     user1.setUsername(user.getUsername());
                                     userRepository.save(user1);
+                                    userRepository.delete(user);
+                                } else {
+                                    userRepository.save(user);
                                 }
-
-                                userRepository.delete(user);
                                 execute(botService.menu(chatId, user.getLanguage()));
                             }
                             case SETTINGS -> {
