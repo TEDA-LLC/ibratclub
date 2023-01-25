@@ -40,6 +40,6 @@ public class Call {
     @ToString.Exclude
     private List<ReviewCategory> ReviewCategory;
 
-    boolean success;
+    private boolean success;
 
 }

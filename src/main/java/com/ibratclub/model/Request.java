@@ -25,7 +25,7 @@ public class Request {
     private Long id;
     private String aboutProduct, category;
     private boolean view = false;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    //    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTime = LocalDateTime.now();
     @ManyToOne
     private Product product;
