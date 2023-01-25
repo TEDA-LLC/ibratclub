@@ -26,7 +26,8 @@ public class Payment { //TODO tolovlar
     private LocalDate paymentDate;
     private Double price;
     private boolean active;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Order order;
     @ManyToOne
     private Employee receiver;

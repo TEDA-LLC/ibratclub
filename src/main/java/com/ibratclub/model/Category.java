@@ -1,6 +1,8 @@
 package com.ibratclub.model;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 /**
@@ -27,5 +29,10 @@ public class Category {
 
     @Column(unique = true)
     private String nameEn;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Bot bot;
 
 }

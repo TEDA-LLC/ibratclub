@@ -2,6 +2,8 @@ package com.ibratclub.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.*;
+
+import com.ibratclub.model.enums.ActiveTypes;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -23,10 +25,11 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String phone;
-    private String activityType;
+    @Enumerated(EnumType.STRING)
+    private ActiveTypes activityType;
     private String stirNumber;
-    private String memberOrganization;
+    @ManyToOne
+    private Company memberOrganization;
     @ManyToOne(cascade = CascadeType.ALL)
     private Address address;
     @OneToMany(mappedBy = "company")
@@ -34,28 +37,35 @@ public class Company {
     private List<BankInfo> bankInfo;
     @ManyToOne
     private Employee director;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime registeredTime = LocalDateTime.now();
     @ManyToMany
     @ToString.Exclude
     private List<User> clientList;
-    @ManyToMany
-    @ToString.Exclude
-    private List<Employee> employees;
     @OneToMany(mappedBy = "company")
     @ToString.Exclude
     private List<Bot> botList;
+    @ManyToMany
+    @ToString.Exclude
+    private List<Employee> employees;
     @Builder.Default
     private boolean active = true;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Attachment attachment;
 
     public Company(Employee director) {
         this.director = director;
     }
 
-    public Company(String name, String phone, Address address, List<User> employees, Employee director) {
+
+    public Company(String name, ActiveTypes activityType, String stirNumber, Address address, Company memberOrganization, List<User> employees, BankInfo bankInfo, Employee director) {
         this.name = name;
-        this.phone = phone;
+        this.activityType = activityType;
+        this.stirNumber = stirNumber;
         this.address = address;
+        this.memberOrganization = memberOrganization;
+//        this.bankInfo = bankInfo;
         this.director = director;
     }
 

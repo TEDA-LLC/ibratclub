@@ -48,7 +48,7 @@ public class ButtonService {
 
         if (language.equals(Language.UZB)) {
             button.setText(ConstantUz.SERVICES_BUTTON);
-            button1.setText(ConstantUz.SYSTEMS_BUTTON);
+            button1.setText(ConstantUz.EVENTS_BUTTON);
             button5.setText(ConstantUz.VACANCY_BUTTON);
 
             button3.setText(ConstantUz.SETTINGS_BUTTON);
@@ -56,7 +56,7 @@ public class ButtonService {
             button2.setText(ConstantUz.MY_REQUESTS);
         } else if (language.equals(Language.ENG)) {
             button.setText(ConstantEn.SERVICES_BUTTON);
-            button1.setText(ConstantEn.SYSTEMS_BUTTON);
+            button1.setText(ConstantEn.EVENTS_BUTTON);
             button5.setText(ConstantEn.VACANCY_BUTTON);
 
             button3.setText(ConstantEn.SETTINGS_BUTTON);
@@ -64,7 +64,7 @@ public class ButtonService {
             button2.setText(ConstantEn.MY_REQUESTS);
         } else {
             button.setText(ConstantRu.SERVICES_BUTTON);
-            button1.setText(ConstantRu.SYSTEMS_BUTTON);
+            button1.setText(ConstantRu.EVENTS_BUTTON);
             button5.setText(ConstantRu.VACANCY_BUTTON);
 
             button3.setText(ConstantRu.SETTINGS_BUTTON);

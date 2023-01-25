@@ -25,7 +25,7 @@ public class Address {
 
     private String streetHome;
 
-//    private Double latitude, longitude;
+    private Double latitude, longitude;
 
     public Address(District district, String streetHome) {
         this.district = district;

@@ -28,8 +28,20 @@ public class Bot {
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private Company company;
+    @OneToMany
+    @ToString.Exclude
+    private List<Employee> authorizedEmployees;
     @OneToMany(mappedBy = "bot")
     @ToString.Exclude
     private List<User> userList;
+    @OneToMany(mappedBy = "bot")
+    @ToString.Exclude
+    private List<Category> categories;
+
+    @OneToMany(mappedBy = "bot")
+    @ToString.Exclude
+    private List<Vacancy> vacancies;
+    @Column(nullable = false)
+    private boolean active = true;
 
 }

@@ -26,5 +26,4 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByBot_IdAndChatId(Long bot_id, String chatId);
     Optional<User> findByBot_IdAndChatIdAndPhone(Long bot_id, String chatId, String phone);
     Optional<User> findByChatId( String chatId);
-
 }

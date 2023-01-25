@@ -30,9 +30,9 @@ public class DataLoader implements CommandLineRunner {
                     .nameEn("Services \uD83D\uDEE0")
                     .build();
             Category system = Category.builder()
-                    .nameUz("Tizimlar \uD83D\uDCBB")
-                    .nameRu("Системы \uD83D\uDCBB")
-                    .nameEn("Systems \uD83D\uDCBB")
+                    .nameUz("Tadbirlar \uD83D\uDCBB")
+                    .nameRu("Выставки \uD83D\uDCBB")
+                    .nameEn("Events \uD83D\uDCBB")
                     .build();
             categoryRepository.save(service);
             categoryRepository.save(system);

@@ -51,5 +51,4 @@ public class VacancyController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
-
 }
