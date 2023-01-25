@@ -13,7 +13,7 @@ import java.util.List;
  * @author Malikov Azizjon  *  16.01.2023  *  18:36   *  IbratClub
  */
 @Repository
-public interface CompanyRepository extends JpaRepository<Employee, Long> {
+public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     Page<Company> findAllByActive(boolean active, Pageable pageable);
 

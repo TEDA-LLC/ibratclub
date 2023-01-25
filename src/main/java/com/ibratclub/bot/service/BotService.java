@@ -7,7 +7,11 @@ import com.ibratclub.model.*;
 import com.ibratclub.model.enums.Language;
 import com.ibratclub.model.enums.RegisteredType;
 import com.ibratclub.repository.*;
+import com.ibratclub.specification.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -18,7 +22,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import java.io.ByteArrayInputStream;
+import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +35,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class BotService {
-
+    @Value("${telegram.bot.id}")
+    private Long botId;
     private final UserHistoryRepository userHistoryRepository;
     private final ButtonService buttonService;
     private final CategoryRepository categoryRepository;
@@ -37,6 +44,7 @@ public class BotService {
     private final WordHistoryRepository wordHistoryRepository;
     private final RequestRepository requestRepository;
     private final VacancyRepository vacancyRepository;
+    private final QrCodeRepository qrCodeRepository;
 
     public SendMessage start(String chatId) {
         return SendMessage.builder()
@@ -229,10 +237,41 @@ public class BotService {
     }
 
     public Long getCategoryIdByName(String message) {
-        Optional<Category> categoryOptional = categoryRepository.findByNameUzOrNameRuOrNameEn(message, message, message);
-        if (categoryOptional.isEmpty()) return null;
+        SearchRequest searchRequest = new SearchRequest();
+        List<FilterRequest> filterRequests = new ArrayList<>();
+        filterRequests.add(FilterRequest.builder().
+                fieldType(FieldType.STRING).
+                operator(Operator.EQUAL).
+                value(message).
+                key("nameUz").
+                build());
+        filterRequests.add(FilterRequest.builder().
+                fieldType(FieldType.STRING).
+                operator(Operator.EQUAL).
+                value(message).
+                or(true).
+                key("nameRu").
+                build());
+        filterRequests.add(FilterRequest.builder().
+                fieldType(FieldType.STRING).
+                operator(Operator.EQUAL).
+                value(message).
+                or(true).
+                key("nameEn").
+                build());
+        searchRequest.setFilters(filterRequests);
+        Page<Category> category = categoryRepository.findAll(new EntitySpecification<Category>(
+                SearchRequest.builder()
+                        .filters(List.of(FilterRequest.builder().
+                                fieldType(FieldType.LONG).
+                                operator(Operator.EQUAL).
+                                value(botId).
+                                key("bot.id")
+                                .build())
+                        ).build()).and(new EntitySpecification<>(searchRequest)), PageRequest.of(0, 1));
+        if (category.isEmpty()) return null;
 
-        else return categoryOptional.get().getId();
+        else return category.getContent().get(0).getId();
     }
 
     public SendMessage products(Long categoryId, Language language, String chatId) {
@@ -350,39 +389,54 @@ public class BotService {
         wordHistoryRepository.save(wordsHistory);
     }
 
-    public SendMessage saveRequest(Update update, User currentUser) {
+    public SendPhoto saveRequest(Update update, User currentUser) {
         String data = update.getCallbackQuery().getData();
 
         Long productId = Long.valueOf(data.substring(8));
         Optional<Product> productOptional = productRepository.findById(productId);
-
+        Product product = productOptional.get();
         Request request = Request.builder().
-                aboutProduct(productOptional.get().getNameEn()).
+                aboutProduct(product.getNameEn()).
                 registeredType(RegisteredType.BOT).
                 dateTime(LocalDateTime.now()).
                 user(currentUser).
                 build();
         Request savedRequest = requestRepository.save(request);
-
+        QrCode qrCode = new QrCode();
+        qrCode.setRequest(savedRequest);
+        qrCode.setUser(currentUser);
+        qrCode.setProduct(product);
+        QrCode saveQrCode = qrCodeRepository.save(qrCode);
+        SendPhoto sendPhoto = new SendPhoto();
+        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+        bb.putLong(saveQrCode.getId().getMostSignificantBits());
+        bb.putLong(saveQrCode.getId().getLeastSignificantBits());
+        InputFile inputFile = new InputFile(new ByteArrayInputStream(bb.array()).toString());
+        sendPhoto.setPhoto(inputFile);
+        sendPhoto.setChatId(update.getCallbackQuery().getMessage().getChatId());
         if (currentUser.getLanguage().equals(Language.UZB)) {
-            return SendMessage.builder()
-                    .text(ConstantUz.RESPONSE_FOR_REQUEST + "\n" +
-                            "Sizning murojaat raqamingiz: " + savedRequest.getId())
-                    .chatId(update.getCallbackQuery().getMessage().getChatId())
-                    .build();
+//            return SendMessage.builder()
+//                    .text(ConstantUz.RESPONSE_FOR_REQUEST + "\n" +
+//                            "Sizning murojaat raqamingiz: " + savedRequest.getId())
+//                    .chatId(update.getCallbackQuery().getMessage().getChatId())
+//                    .build();
+            sendPhoto.setCaption(ConstantUz.RESPONSE_FOR_REQUEST);
         } else if (currentUser.getLanguage().equals(Language.ENG)) {
-            return SendMessage.builder()
-                    .text(ConstantEn.RESPONSE_FOR_REQUEST + "\n" +
-                            "Your reference number: " + savedRequest.getId())
-                    .chatId(update.getCallbackQuery().getMessage().getChatId())
-                    .build();
+//            return SendMessage.builder()
+//                    .text(ConstantEn.RESPONSE_FOR_REQUEST + "\n" +
+//                            "Your reference number: " + savedRequest.getId())
+//                    .chatId(update.getCallbackQuery().getMessage().getChatId())
+//                    .build();
+            sendPhoto.setCaption(ConstantEn.RESPONSE_FOR_REQUEST);
         } else {
-            return SendMessage.builder()
-                    .text(ConstantRu.RESPONSE_FOR_REQUEST + "\n" +
-                            "Ваш номер заявки: " + savedRequest.getId())
-                    .chatId(update.getCallbackQuery().getMessage().getChatId())
-                    .build();
+//            return SendMessage.builder()
+//                    .text(ConstantRu.RESPONSE_FOR_REQUEST + "\n" +
+//                            "Ваш номер заявки: " + savedRequest.getId())
+//                    .chatId(update.getCallbackQuery().getMessage().getChatId())
+//                    .build();
+            sendPhoto.setCaption(ConstantRu.RESPONSE_FOR_REQUEST);
         }
+        return sendPhoto;
     }
 
     public SendMessage myRequests(String chatId, User currentUser) {

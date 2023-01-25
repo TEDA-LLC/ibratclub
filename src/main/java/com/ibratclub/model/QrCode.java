@@ -42,4 +42,8 @@ public class QrCode {
     @ManyToOne
     private Company company;
 
+    @ManyToOne
+    @JoinColumn(unique = true)
+    private Request request;
+
 }

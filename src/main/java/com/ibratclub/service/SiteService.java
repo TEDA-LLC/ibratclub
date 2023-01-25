@@ -4,21 +4,20 @@ import com.ibratclub.bot.TelegramBot;
 import com.ibratclub.dto.ApiResponse;
 import com.ibratclub.dto.RequestDTO;
 import com.ibratclub.dto.ReviewDTO;
-import com.ibratclub.model.Request;
-import com.ibratclub.model.Review;
-import com.ibratclub.model.SiteHistory;
-import com.ibratclub.model.User;
+import com.ibratclub.model.*;
 import com.ibratclub.model.enums.RegisteredType;
-import com.ibratclub.repository.RequestRepository;
-import com.ibratclub.repository.ReviewRepository;
-import com.ibratclub.repository.SiteHistoryRepository;
-import com.ibratclub.repository.UserRepository;
+import com.ibratclub.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -32,12 +31,17 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SiteService {
-
+    @Value("${telegram.bot.id}")
+    private Long botId;
     private final RequestRepository requestRepository;
     private final SiteHistoryRepository siteHistoryRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
     private final TelegramBot telegramBot;
+    private final ProductRepository productRepository;
+    private final QrCodeRepository qrCodeRepository;
+
+    private final QRCodeService qrCodeService;
 
     public ApiResponse<?> add(RequestDTO dto) {
         boolean isEmail = dto.getEmail() == null || !dto.getEmail().equals("");
@@ -46,6 +50,15 @@ public class SiteService {
         request.setRegisteredType(RegisteredType.WEBSITE);
         request.setAboutProduct(dto.getAboutProduct());
         request.setDateTime(LocalDateTime.now());
+
+        Optional<Product> productOptional = productRepository.findById(dto.getProductId());
+        if (productOptional.isEmpty() || !productOptional.get().getCategory().getBot().getId().equals(botId)){
+            return ApiResponse.builder().
+                    message("Not found").
+                    success(false).
+                    status(400).
+                    build();
+        }
 
         if (dto.getCategory() != null)
             request.setCategory(dto.getCategory());
@@ -62,6 +75,11 @@ public class SiteService {
                 User userSave = userRepository.save(user);
                 request.setUser(userSave);
                 Request save = requestRepository.save(request);
+                QrCode qrCode = new QrCode();
+                qrCode.setRequest(save);
+                qrCode.setUser(user);
+                qrCode.setProduct(productOptional.get());
+                qrCodeRepository.save(qrCode);
                 return ApiResponse.builder().
                         message("Request was added !").
                         status(201).
@@ -532,4 +550,20 @@ public class SiteService {
 
     }
 
+    @SneakyThrows
+    public ResponseEntity<?> getQrCode(Long requestId, HttpServletResponse response) {
+        Optional<QrCode> qrCodeOptional = qrCodeRepository.findByRequest_Id(requestId);
+        if (qrCodeOptional.isEmpty() || !qrCodeOptional.get().getProduct().getCategory().getBot().getId().equals(botId)){
+            return ResponseEntity.badRequest().body("Not found!!!");
+        }
+        QrCode qrCode = qrCodeOptional.get();
+            response.setContentType("image/png");
+            byte[] qrCodeBytes = qrCodeService.generateQRCode(qrCode.getId().toString(), 500, 500);
+            OutputStream outputStream = response.getOutputStream();
+            outputStream.write(qrCodeBytes);
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf("image/png"))
+                .contentLength(qrCodeBytes.length)
+                .body(qrCodeBytes);
+    }
 }

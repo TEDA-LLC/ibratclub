@@ -1,10 +1,9 @@
 package com.ibratclub.controller;
 
 import com.ibratclub.dto.ApiResponse;
-import com.ibratclub.model.User;
+import com.ibratclub.model.QrCode;
 import com.ibratclub.service.EventService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +21,19 @@ public class EventController {
     private final EventService eventService;
 
     @GetMapping
-    public ResponseEntity<?> getByEvent(@RequestParam(defaultValue = "0") int page, @RequestParam Long id){
-        ApiResponse<Page<User>> response = eventService.getByEvent(id, page);
+    public ResponseEntity<?> getByEvent(@RequestParam Long id){
+        ApiResponse<List<QrCode>> response = eventService.getByEvent(id);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getOne(@PathVariable String id){
+        ApiResponse<QrCode> response = eventService.getOne(id);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+    @PatchMapping
+    public ResponseEntity<?> edit(@RequestParam String id){
+        ApiResponse<?> response = eventService.edit(id);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 //    @GetMapping

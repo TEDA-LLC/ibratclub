@@ -5,8 +5,10 @@ package com.ibratclub.bot.constant;
  */
 public interface ConstantUz {
 
-    String START = "Assalomu aleykum! Botimizga xush kelibsiz! \n" +
-            "Xizmat ko’rsatish tilini tanlang:\n";
+    String START = """
+            Assalomu aleykum! Botimizga xush kelibsiz!\s
+            Xizmat ko’rsatish tilini tanlang:
+            """;
     String BUTTON = "O'zbekcha \uD83C\uDDFA\uD83C\uDDFF";
     String CONTACT_BUTTON = "Raqamni jo'natish \uD83D\uDCDE";
     String CONTACT = "Telefon raqamingizni kiriting\n" +
@@ -18,21 +20,23 @@ public interface ConstantUz {
     String SETTINGS_BUTTON = "Sozlamalar ⚙";
     String VACANCY_BUTTON = "Vakansiya \uD83D\uDC68\uD83C\uDFFB\u200D\uD83D\uDCBB";
     String MENU = "Asosiy menyu : ";
-    String ABOUT_US = "<b>IBRAT Club \n \n</b>" +
-            "Hozirgi kunda rivojlanib borayotgan O'zbekiston xalqining hayotini yaxshilash." +
-            "\n" +
-            "Raqamli Iqtisodiyot bosqichida ko'plab tadbirkorlarning xizmatlarini elektronlashtirish va ularni qulay narxda taklif qilish.\n" +
-            "\n" +
-            "\uD83C\uDF10 <a href=\"https://teda.uz/\"> teda.uz</a>\n" +
-            "☎ <b>+998 (93) 159 25 58</b>\n" +
-            "\uD83D\uDCE7 <b>ibratclub@gmail.com</b>\n" +
-            "\uD83D\uDCCD <b>Toshkent sh. Do'stlik metro ,Toshkent 700000</b>\n" +
-            "\uD83D\uDCF8 <a href=\"https://instagram.com/teda.uz?igshid=YmMyMTA2M2Y=\"> @teda_uz</a>\n" +
-            "<b>Menejirimizga savolingizni qoldiring va </b>\n"+
-            "<b> menejerimiz sizga imkon qadar tezroq javob beradi.</b>\n"+
-            "\uD83D\uDC64 <b> Manager : @ibrat</b>\n" +
-            "\uD83C\uDFE6<b>Х/р: 20208000904456127001, РАКБ «QQB» Toshkent shahar regional f-li</b>\n" +
-            "<b>МФО: 01037 INN: 205985751  ОКЭД: 62010</b>\n";
+    String ABOUT_US = """
+            <b>IBRAT Club\s
+            \s
+            </b>Hozirgi kunda rivojlanib borayotgan O'zbekiston xalqining hayotini yaxshilash.
+            Raqamli Iqtisodiyot bosqichida ko'plab tadbirkorlarning xizmatlarini elektronlashtirish va ularni qulay narxda taklif qilish.
+
+            \uD83C\uDF10 <a href="https://teda.uz/"> teda.uz</a>
+            ☎ <b>+998 (93) 159 25 58</b>
+            \uD83D\uDCE7 <b>ibratclub@gmail.com</b>
+            \uD83D\uDCCD <b>Toshkent sh. Do'stlik metro ,Toshkent 700000</b>
+            \uD83D\uDCF8 <a href="https://instagram.com/teda.uz?igshid=YmMyMTA2M2Y="> @teda_uz</a>
+            <b>Menejirimizga savolingizni qoldiring va </b>
+            <b> menejerimiz sizga imkon qadar tezroq javob beradi.</b>
+            \uD83D\uDC64 <b> Manager : @ibrat</b>
+            \uD83C\uDFE6<b>Х/р: 20208000904456127001, РАКБ «QQB» Toshkent shahar regional f-li</b>
+            <b>МФО: 01037 INN: 205985751  ОКЭД: 62010</b>
+            """;
 
     String VACANCY = "Hozircha vakansiya yo`q \n" ;
     //            "\uD83D\uDC64 Manager : @Proekt_Manager\n";
@@ -46,8 +50,10 @@ public interface ConstantUz {
     String OK = "\uD83C\uDD97";
     String IN_DETAIL = "Batafsil\uD83D\uDD0E";
     String REQUEST = "So'rov\uD83D\uDCCC";
-    String RESPONSE_FOR_REQUEST = "Murojaatingiz muvafaqiyatli qabul qilindi.✅\n" +
-            "Tez orada menejerimiz aloqaga chiqadi.";
+//    String RESPONSE_FOR_REQUEST = "Murojaatingiz muvafaqiyatli qabul qilindi.✅\n" +
+//            "Tez orada menejerimiz aloqaga chiqadi.";
+String RESPONSE_FOR_REQUEST = "Murojaatingiz muvafaqiyatli qabul qilindi.✅\n" +
+        "";
     String MY_REQUESTS = "Mening Murojaatlarim \uD83C\uDFAF";
 
     String MY_REQUESTS_EMPTY = "Sizda hali hech qanday murojatlar mavjud emas";

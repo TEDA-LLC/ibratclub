@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -94,6 +95,11 @@ public class SiteController {
     public ResponseEntity<?> sendMessage(@PathVariable Long id){
         ApiResponse<?> response = siteService.sendMessage(id);
         return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @GetMapping("/getQrCode")
+    public ResponseEntity<?> getQrCode(@RequestParam Long requestId, HttpServletResponse response){
+        return siteService.getQrCode(requestId, response);
     }
 
 }

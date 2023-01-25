@@ -2,16 +2,17 @@ package com.ibratclub.service;
 
 import com.ibratclub.dto.ApiResponse;
 import com.ibratclub.model.Product;
-import com.ibratclub.model.User;
+import com.ibratclub.model.QrCode;
 import com.ibratclub.repository.ProductRepository;
+import com.ibratclub.repository.QrCodeRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author Malikov Azizjon  *  23.01.2023  *  23:36   *  IbratClub
@@ -21,11 +22,64 @@ import java.util.Optional;
 public class EventService {
     @Value("${page.size}")
     private int size;
+    @Value("${telegram.bot.id}")
+    private Long botId;
     private final ProductRepository productRepository;
+    private final QrCodeRepository qrCodeRepository;
 
-    public ApiResponse<Page<User>> getByEvent(Long id, int page) {
+    public ApiResponse<List<QrCode>> getByEvent(Long id) {
         Optional<Product> productOptional = productRepository.findById(id);
-//        if (productOptional.isEmpty() || productOptional.get().getCategory().get)
+        if (productOptional.isEmpty() || !productOptional.get().getCategory().getBot().getId().equals(botId)){
+            return ApiResponse.<List<QrCode>>builder().
+                    message("Not found!!!").
+                    status(400).
+                    success(false).
+                    build();
+        }
+        List<QrCode> allByProduct = qrCodeRepository.findAllByProduct(productOptional.get());
+        return ApiResponse.<List<QrCode>>builder().
+                message("Here!!!").
+                status(200).
+                success(true).
+                data(allByProduct).
+                build();
+    }
+
+    public ApiResponse<QrCode> getOne(String id) {
+        Optional<QrCode> codeOptional = qrCodeRepository.findById(UUID.fromString(id));
+        if (codeOptional.isEmpty() || !codeOptional.get().getProduct().getCategory().getBot().getId().equals(botId)){
+            return ApiResponse.<QrCode>builder().
+                    message("Not found!!!").
+                    status(400).
+                    success(false).
+                    build();
+        }
+        return ApiResponse.<QrCode>builder().
+                message("Here!!!").
+                status(200).
+                success(true).
+                data(codeOptional.get()).
+                build();
+    }
+
+    public ApiResponse<?> edit(String id) {
+        Optional<QrCode> codeOptional = qrCodeRepository.findById(UUID.fromString(id));
+        if (codeOptional.isEmpty() || !codeOptional.get().getProduct().getCategory().getBot().getId().equals(botId)){
+            return ApiResponse.<QrCode>builder().
+                    message("Not found!!!").
+                    status(400).
+                    success(false).
+                    build();
+        }
+        QrCode qrCode = codeOptional.get();
+        qrCode.setArrivalTime(LocalDateTime.now());
+        QrCode saveQrCode = qrCodeRepository.save(qrCode);
+        return ApiResponse.builder().
+                message("Success").
+                success(true).
+                status(200).
+                data(saveQrCode).
+                build();
     }
 
 
