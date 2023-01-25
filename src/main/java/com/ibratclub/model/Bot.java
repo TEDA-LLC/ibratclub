@@ -44,4 +44,6 @@ public class Bot {
     @Column(nullable = false)
     private boolean active = true;
 
+    @ManyToOne
+    private Attachment logo;
 }

@@ -45,6 +45,7 @@ public class BotService {
     private final RequestRepository requestRepository;
     private final VacancyRepository vacancyRepository;
     private final QrCodeRepository qrCodeRepository;
+    private final BotRepository botRepository;
 
     public SendMessage start(String chatId) {
         return SendMessage.builder()
@@ -100,20 +101,34 @@ public class BotService {
         }
     }
 
-    public SendMessage aboutUs(String chatId, Language language) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setParseMode("HTML");
-        if (language.equals(Language.UZB))
-            sendMessage.setText(ConstantUz.ABOUT_US);
-        else if (language.equals(Language.RUS))
-            sendMessage.setText(ConstantRu.ABOUT_US);
-        else sendMessage.setText(ConstantEn.ABOUT_US);
+    public SendPhoto aboutUs(String chatId, Language language) {
+        Optional<Bot> botOptional = botRepository.findById(botId);
+        Bot bot = botOptional.get();
+//        if(bot.getLogo() == null ) {
+//            SendMessage sendMessage = new SendMessage();
+//            sendMessage.setParseMode("HTML");
+//            if (language.equals(Language.UZB))
+//                sendMessage.setText(ConstantUz.ABOUT_US);
+//            else if (language.equals(Language.RUS))
+//                sendMessage.setText(ConstantRu.ABOUT_US);
+//            else sendMessage.setText(ConstantEn.ABOUT_US);
+//
+//            sendMessage.setChatId(chatId);
+//
+//            sendMessage.setReplyMarkup(buttonService.menuButton(language));
+//            return sendMessage;
+            SendPhoto sendPhoto = new SendPhoto();
+            sendPhoto.setParseMode("HTML");
+            if (language.equals(Language.UZB))
+                sendPhoto.setCaption(ConstantUz.ABOUT_US);
+            else if (language.equals(Language.RUS))
+                sendPhoto.setCaption(ConstantRu.ABOUT_US);
+            else sendPhoto.setCaption(ConstantEn.ABOUT_US);
+            sendPhoto.setPhoto(new InputFile(new ByteArrayInputStream(bot.getLogo().getBytes()), bot.getLogo().getOriginalName()));
+            sendPhoto.setChatId(chatId);
 
-        sendMessage.setChatId(chatId);
-
-        sendMessage.setReplyMarkup(buttonService.menuButton(language));
-
-        return sendMessage;
+            sendPhoto.setReplyMarkup(buttonService.menuButton(language));
+            return sendPhoto;
 
     }
 
