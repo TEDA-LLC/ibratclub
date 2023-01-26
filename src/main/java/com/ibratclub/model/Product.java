@@ -1,7 +1,8 @@
 package com.ibratclub.model;
 
-import javax.persistence.*;
 import lombok.*;
+
+import javax.persistence.*;
 
 /**
  * @author Malikov Azizjon  *  16.01.2023  *  17:42   *  IbratClub
@@ -33,7 +34,7 @@ public class Product {
     private Integer minimumTerm;
 
     private String executionInterval;
-
+    @Column(nullable = true)
     private boolean active;
 
 }
