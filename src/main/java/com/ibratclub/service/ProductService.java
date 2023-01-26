@@ -150,7 +150,7 @@ public class ProductService {
 
     public ApiResponse<?> delete(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isEmpty()) {
+        if (optionalProduct.isEmpty() || !optionalProduct.get().getCategory().getBot().getId().equals(botId)) {
             return ApiResponse.builder().
                     message("Product Not Found").
                     status(204).

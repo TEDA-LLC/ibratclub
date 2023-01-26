@@ -3,14 +3,23 @@ package com.ibratclub.controller;
 import com.ibratclub.dto.ApiResponse;
 import com.ibratclub.dto.RequestDTO;
 import com.ibratclub.dto.ReviewDTO;
+import com.ibratclub.model.Product;
 import com.ibratclub.model.Request;
 import com.ibratclub.model.Review;
 import com.ibratclub.model.SiteHistory;
 import com.ibratclub.model.User;
+import com.ibratclub.service.ProductService;
 import com.ibratclub.service.SiteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -25,6 +34,7 @@ import java.util.Map;
 public class SiteController {
 
     private final SiteService siteService;
+    private final ProductService productService;
 
     @GetMapping("/request")
     public ResponseEntity<?> getRequest() {
@@ -101,5 +111,20 @@ public class SiteController {
     public ResponseEntity<?> getQrCode(@RequestParam Long requestId, HttpServletResponse response){
         return siteService.getQrCode(requestId, response);
     }
+    @GetMapping("/product")
+    public ResponseEntity<?> getAll() {
+        ApiResponse<List<Product>> response = productService.getAll();
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 
+    @GetMapping("/product/{id}")
+    public ResponseEntity<?> getOne(@PathVariable Long id) {
+        ApiResponse<Product> response = productService.getOne(id);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @GetMapping("/photo/{id}")
+    public ResponseEntity<?> getPhoto(@PathVariable Long id){
+        return productService.getPhoto(id);
+    }
 }

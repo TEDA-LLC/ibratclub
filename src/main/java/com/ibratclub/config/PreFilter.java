@@ -31,8 +31,7 @@ public class PreFilter extends OncePerRequestFilter {
         String token = request.getHeader("Authorization");
         if (token == null || token.length() <= 8 || !token.substring(7).equals(botToken)) {
             if (!request.getServletPath().startsWith("/api/site") && !request.getServletPath().startsWith("/api/vacancy") && !request.getMethod().equals("GET")
-                    && !request.getMethod().equals("POST") ||
-                    (!request.getServletPath().startsWith("/api/product") && !request.getMethod().equals("POST"))) { //&& !request.getMethod().equals("POST") && !request.getMethod().equals("GET") && !request.getMethod().equals("PUT")) {
+                    && !request.getMethod().equals("POST") ) { //&& !request.getMethod().equals("POST") && !request.getMethod().equals("GET") && !request.getMethod().equals("PUT")) {
                 response.getWriter().print("{\"message\":\"Forbidden!\",\"success\":false,\"status\":403}");
                 response.setContentType("application/json");
                 if (!request.getMethod().equalsIgnoreCase("OPTIONS")) {
