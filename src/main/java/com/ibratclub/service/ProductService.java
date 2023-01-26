@@ -33,26 +33,19 @@ public class ProductService {
     private final AttachmentRepository attachmentRepository;
 
     public ApiResponse<List<Product>> getAll() {
-        List<Product> products = productRepository.findAll();
-        if (products.isEmpty()) {
-            return ApiResponse.<List<Product>>builder().
-                    message("Not Found").
-                    status(204).
-                    success(false).
-                    build();
-        } else {
-            return ApiResponse.<List<Product>>builder().
-                    message("Here").
-                    status(200).
-                    success(true).
-                    data(products).
-                    build();
-        }
+        List<Product> products = productRepository.findAllByActiveTrueAndCategory_Bot_Id(botId);
+        return ApiResponse.<List<Product>>builder().
+                message("Here").
+                status(200).
+                success(true).
+                data(products).
+                build();
     }
+
 
     public ApiResponse<Product> getOne(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isEmpty()) {
+        if (optionalProduct.isEmpty() || !optionalProduct.get().getCategory().getBot().getId().equals(botId)) {
             return ApiResponse.<Product>builder().
                     message("Not Found").
                     status(204).
@@ -117,7 +110,7 @@ public class ProductService {
                     success(false).
                     build();
         }
-        if (optionalCategory.isEmpty()) {
+        if (optionalCategory.isEmpty() || !optionalCategory.get().getBot().getId().equals(botId)) {
             return ApiResponse.builder().
                     message("Category Not Found").
                     status(204).
@@ -164,7 +157,9 @@ public class ProductService {
                     success(false).
                     build();
         }
-        productRepository.deleteById(id);
+        Product product = optionalProduct.get();
+        product.setActive(false);
+        productRepository.save(product);
         return ApiResponse.builder().
                 message("Deleted").
                 status(201).

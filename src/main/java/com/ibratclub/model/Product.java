@@ -34,4 +34,6 @@ public class Product {
 
     private String executionInterval;
 
+    private boolean active;
+
 }
