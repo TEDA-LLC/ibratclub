@@ -7,7 +7,6 @@ import com.ibratclub.model.enums.Language;
 import com.ibratclub.model.enums.RegisteredType;
 import com.ibratclub.model.enums.State;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -70,18 +69,19 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RegisteredType registeredType;
 
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator",
-            parameters = {
-                    @org.hibernate.annotations.Parameter(
-                            name = "uuid_gen_strategy_class",
-                            value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
-                    )
-            }
-    )
+    //    @GeneratedValue(generator = "UUID")
+//    @GenericGenerator(
+//            name = "UUID",
+//            strategy = "org.hibernate.id.UUIDGenerator",
+//            parameters = {
+//                    @org.hibernate.annotations.Parameter(
+//                            name = "uuid_gen_strategy_class",
+//                            value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
+//                    )
+//            }
+//    )
+    @JsonIgnore
     @Column(unique = true)
-    private UUID qrcode;
+    private UUID qrcode = UUID.randomUUID();
 
 }
