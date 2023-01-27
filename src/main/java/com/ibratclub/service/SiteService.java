@@ -55,14 +55,15 @@ public class SiteService {
         request.setDateTime(LocalDateTime.now());
 
         Optional<Product> productOptional = productRepository.findById(dto.getProductId());
-        if (productOptional.isEmpty() || !productOptional.get().getCategory().getBot().getId().equals(botId)){
+        if (productOptional.isEmpty() || !productOptional.get().getCategory().getBot().getId().equals(botId)) {
             return ApiResponse.builder().
                     message("Not found").
                     success(false).
                     status(400).
                     build();
         }
-        request.setProduct(productOptional.get());
+        Product product = productOptional.get();
+        request.setProduct(product);
         if (dto.getCategory() != null)
             request.setCategory(dto.getCategory());
 
@@ -77,6 +78,15 @@ public class SiteService {
                 user.setEmail(dto.getEmail());
                 User userSave = userRepository.save(user);
                 request.setUser(userSave);
+                List<Request> requestList = requestRepository.findAllByProductAndUser_Phone(product, user.getPhone());
+                if (!requestList.isEmpty()) {
+                    return ApiResponse.builder().
+                            message("Request was added !").
+                            status(200).
+                            success(true).
+                            data(requestList.get(0)).
+                            build();
+                }
                 Request save = requestRepository.save(request);
 //                QrCode qrCode = new QrCode();
 //                qrCode.setRequest(save);
@@ -84,7 +94,7 @@ public class SiteService {
 //                qrCode.setProduct(productOptional.get());
 //                qrCodeRepository.save(qrCode);
                 return ApiResponse.builder().
-                        message("Request was added !").
+                        message("Request saved!").
                         status(201).
                         success(true).
                         data(save).
@@ -101,9 +111,18 @@ public class SiteService {
                 user.setPhone(dto.getPhone());
                 User userSave = userRepository.save(user);
                 request.setUser(userSave);
+                List<Request> requestList = requestRepository.findAllByProductAndUser_Email(product, user.getEmail());
+                if (!requestList.isEmpty()) {
+                    return ApiResponse.builder().
+                            message("Request was added !").
+                            status(200).
+                            success(true).
+                            data(requestList.get(0)).
+                            build();
+                }
                 Request save = requestRepository.save(request);
                 return ApiResponse.builder().
-                        message("Request was added !").
+                        message("Request saved!").
                         status(201).
                         success(true).
                         data(save).
@@ -125,7 +144,7 @@ public class SiteService {
         request.setUser(userSave);
         Request save = requestRepository.save(request);
         return ApiResponse.builder().
-                message("Request was added !").
+                message("Request saved!").
                 status(201).
                 success(true).
                 data(save).
@@ -179,7 +198,8 @@ public class SiteService {
                         success(true).
                         build();
             }
-        } if (isPhone) {
+        }
+        if (isPhone) {
             Optional<User> userOptionalByPhone = userRepository.findByPhoneAndCompany_Id(phone, companyId);
             if (userOptionalByPhone.isPresent()) {
                 User userByPhone = userOptionalByPhone.get();
@@ -488,7 +508,8 @@ public class SiteService {
                         data(save).
                         build();
             }
-        } if (isPhone) {
+        }
+        if (isPhone) {
             Optional<User> userOptionalByPhone = userRepository.findByPhoneAndCompany_Id(phone, companyId);
             if (userOptionalByPhone.isPresent()) {
                 User userByPhone = userOptionalByPhone.get();
@@ -562,17 +583,17 @@ public class SiteService {
     @SneakyThrows
     public ResponseEntity<?> getQrCode(Long requestId, HttpServletResponse response) {
         Optional<Request> requestOptional = requestRepository.findById(requestId);
-        if (requestOptional.isEmpty() || !requestOptional.get().getProduct().getCategory().getBot().getId().equals(botId)){
+        if (requestOptional.isEmpty() || !requestOptional.get().getProduct().getCategory().getBot().getId().equals(botId)) {
             return ResponseEntity.badRequest().body("Request not found!!!");
         }
         Request request = requestOptional.get();
-        if (request.getUser() == null){
+        if (request.getUser() == null) {
             return ResponseEntity.badRequest().body("User not found!!!");
         }
-            response.setContentType("image/png");
-            byte[] qrCodeBytes = qrCodeService.generateQRCode(request.getUser().getQrcode().toString(), 500, 500);
-            OutputStream outputStream = response.getOutputStream();
-            outputStream.write(qrCodeBytes);
+        response.setContentType("image/png");
+        byte[] qrCodeBytes = qrCodeService.generateQRCode(request.getUser().getQrcode().toString(), 500, 500);
+        OutputStream outputStream = response.getOutputStream();
+        outputStream.write(qrCodeBytes);
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf("image/png"))
                 .contentLength(qrCodeBytes.length)

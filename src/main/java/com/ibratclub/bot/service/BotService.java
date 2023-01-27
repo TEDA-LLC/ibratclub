@@ -414,6 +414,7 @@ public class BotService {
                 registeredType(RegisteredType.BOT).
                 dateTime(LocalDateTime.now()).
                 user(currentUser).
+                product(product).
                 build();
         Request savedRequest = requestRepository.save(request);
 

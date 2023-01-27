@@ -1,5 +1,6 @@
 package com.ibratclub.repository;
 
+import com.ibratclub.model.Product;
 import com.ibratclub.model.Request;
 import com.ibratclub.model.User;
 import org.springframework.data.domain.Page;
@@ -18,5 +19,7 @@ public interface RequestRepository extends JpaRepository<Request,Long> {
 
     List<Request> findAllByUser(User user, Sort sort);
     List<Request> findAllByUser(User user);
+    List<Request> findAllByProductAndUser_Email(Product product, String email);
+    List<Request> findAllByProductAndUser_Phone(Product product, String phone);
     Page<Request> findAllByView(boolean view, Pageable pageable);
 }
