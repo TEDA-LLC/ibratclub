@@ -123,6 +123,11 @@ public class SiteController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @PatchMapping("/request")
+    public ResponseEntity<?> editRequest(@RequestParam Long id){
+        ApiResponse<?> response = siteService.editRequest(id);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
     @GetMapping("/photo/{id}")
     public ResponseEntity<?> getPhoto(@PathVariable Long id){
         return productService.getPhoto(id);

@@ -578,4 +578,23 @@ public class SiteService {
                 .contentLength(qrCodeBytes.length)
                 .body(qrCodeBytes);
     }
+
+    public ApiResponse<?> editRequest(Long id) {
+        Optional<Request> requestOptional = requestRepository.findById(id);
+        if (requestOptional.isEmpty() || !requestOptional.get().getUser().getCompany().getId().equals(companyId)) {
+            return ApiResponse.builder().
+                    message("Not found!!!").
+                    status(400).
+                    success(false).
+                    build();
+        }
+        Request request = requestOptional.get();
+        request.setArrivalTime(LocalDateTime.now());
+        requestRepository.save(request);
+        return ApiResponse.builder().
+                message("Success!!!").
+                status(200).
+                success(true).
+                build();
+    }
 }
