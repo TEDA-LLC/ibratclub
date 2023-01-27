@@ -39,7 +39,8 @@ public class Product {
     private Integer minimumTerm;
 
     private String executionInterval;
+    @Builder.Default
     @Column(nullable = true)
-    private boolean active;
+    private boolean active = true;
 
 }

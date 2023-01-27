@@ -33,3 +33,5 @@ telegram:
 debug: true
 page:
   size: 20
+company:
+  id: 2

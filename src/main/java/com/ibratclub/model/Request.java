@@ -36,5 +36,6 @@ public class Request {
     private RegisteredType registeredType;
     @ManyToOne
     private Employee employee;
+    private LocalDateTime arrivalTime;
 
 }

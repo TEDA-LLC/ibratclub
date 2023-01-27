@@ -33,15 +33,18 @@ import java.util.stream.Collectors;
 public class SiteService {
     @Value("${telegram.bot.id}")
     private Long botId;
+    @Value("${company.id}")
+    private Long companyId;
     private final RequestRepository requestRepository;
     private final SiteHistoryRepository siteHistoryRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
     private final TelegramBot telegramBot;
     private final ProductRepository productRepository;
-    private final QrCodeRepository qrCodeRepository;
 
     private final QRCodeService qrCodeService;
+    private final BotRepository botRepository;
+    private final CompanyRepository companyRepository;
 
     public ApiResponse<?> add(RequestDTO dto) {
         boolean isEmail = dto.getEmail() == null || !dto.getEmail().equals("");
@@ -59,12 +62,12 @@ public class SiteService {
                     status(400).
                     build();
         }
-
+        request.setProduct(productOptional.get());
         if (dto.getCategory() != null)
             request.setCategory(dto.getCategory());
 
         if (isPhone) {
-            Optional<User> userOptionalByPhone = userRepository.findByPhone(dto.getPhone());
+            Optional<User> userOptionalByPhone = userRepository.findByPhoneAndCompany_Id(dto.getPhone(), companyId);
             if (userOptionalByPhone.isPresent()) {
                 User user = userOptionalByPhone.get();
                 if (dto.getName() != null && !dto.getName().equals(""))
@@ -75,11 +78,11 @@ public class SiteService {
                 User userSave = userRepository.save(user);
                 request.setUser(userSave);
                 Request save = requestRepository.save(request);
-                QrCode qrCode = new QrCode();
-                qrCode.setRequest(save);
-                qrCode.setUser(user);
-                qrCode.setProduct(productOptional.get());
-                qrCodeRepository.save(qrCode);
+//                QrCode qrCode = new QrCode();
+//                qrCode.setRequest(save);
+//                qrCode.setUser(user);
+//                qrCode.setProduct(productOptional.get());
+//                qrCodeRepository.save(qrCode);
                 return ApiResponse.builder().
                         message("Request was added !").
                         status(201).
@@ -90,7 +93,7 @@ public class SiteService {
         }
 
         if (isEmail) {
-            Optional<User> userOptionalByEmail = userRepository.findByEmail(dto.getEmail());
+            Optional<User> userOptionalByEmail = userRepository.findByEmailAndCompany_Id(dto.getEmail(), companyId);
             if (userOptionalByEmail.isPresent()) {
                 User user = userOptionalByEmail.get();
                 user.setLastOperationTime(LocalDateTime.now());
@@ -116,6 +119,8 @@ public class SiteService {
         user.setEmail(dto.getEmail());
         user.setRegisteredTime(LocalDateTime.now());
         user.setRegisteredType(RegisteredType.WEBSITE);
+        user.setBot(botRepository.findById(botId).get());
+        user.setCompany(companyRepository.findById(companyId).get());
         User userSave = userRepository.save(user);
         request.setUser(userSave);
         Request save = requestRepository.save(request);
@@ -137,8 +142,8 @@ public class SiteService {
             isPhone = !phone.equals("");
         }
         if (isEmail && isPhone) {
-            Optional<User> userOptionalByEmail1 = userRepository.findByEmail(email);
-            Optional<User> userOptionalByPhone1 = userRepository.findByPhone(phone);
+            Optional<User> userOptionalByEmail1 = userRepository.findByEmailAndCompany_Id(email, companyId);
+            Optional<User> userOptionalByPhone1 = userRepository.findByPhoneAndCompany_Id(phone, companyId);
             if (userOptionalByPhone1.isPresent() && userOptionalByEmail1.isPresent()) {
                 User userByEmail = userOptionalByEmail1.get();
                 User userByPhone = userOptionalByPhone1.get();
@@ -158,7 +163,7 @@ public class SiteService {
 
         }
         if (isEmail) {
-            Optional<User> userOptionalByEmail = userRepository.findByEmail(email);
+            Optional<User> userOptionalByEmail = userRepository.findByEmailAndCompany_Id(email, companyId);
             if (userOptionalByEmail.isPresent()) {
                 User userByEmail = userOptionalByEmail.get();
                 if (userByEmail.getPhone() == null) {
@@ -175,7 +180,7 @@ public class SiteService {
                         build();
             }
         } if (isPhone) {
-            Optional<User> userOptionalByPhone = userRepository.findByPhone(phone);
+            Optional<User> userOptionalByPhone = userRepository.findByPhoneAndCompany_Id(phone, companyId);
             if (userOptionalByPhone.isPresent()) {
                 User userByPhone = userOptionalByPhone.get();
                 if (userByPhone.getEmail() == null) {
@@ -234,6 +239,8 @@ public class SiteService {
         }
         user.setCount(1);
         user.setRegisteredType(RegisteredType.WEBSITE);
+        user.setBot(botRepository.findById(botId).get());
+        user.setCompany(companyRepository.findById(companyId).get());
         User save = userRepository.save(user);
         history.setUser(save);
         siteHistoryRepository.save(history);
@@ -279,7 +286,7 @@ public class SiteService {
     }
 
     public ApiResponse<?> addReview(ReviewDTO dto) {
-        Optional<User> userOptionalByPhone = userRepository.findByPhone(dto.getPhone());
+        Optional<User> userOptionalByPhone = userRepository.findByPhoneAndCompany_Id(dto.getPhone(), companyId);
         if (userOptionalByPhone.isEmpty()) {
             return ApiResponse.builder().
                     message("User not found !").
@@ -446,8 +453,8 @@ public class SiteService {
             isPhone = !phone.equals("");
         }
         if (isEmail && isPhone) {
-            Optional<User> userOptionalByEmail1 = userRepository.findByEmail(email);
-            Optional<User> userOptionalByPhone1 = userRepository.findByPhone(phone);
+            Optional<User> userOptionalByEmail1 = userRepository.findByEmailAndCompany_Id(email, companyId);
+            Optional<User> userOptionalByPhone1 = userRepository.findByPhoneAndCompany_Id(phone, companyId);
             if (userOptionalByPhone1.isPresent() && userOptionalByEmail1.isPresent()) {
                 User userByEmail = userOptionalByEmail1.get();
                 User userByPhone = userOptionalByPhone1.get();
@@ -466,7 +473,7 @@ public class SiteService {
 
         }
         if (isEmail) {
-            Optional<User> userOptionalByEmail = userRepository.findByEmail(email);
+            Optional<User> userOptionalByEmail = userRepository.findByEmailAndCompany_Id(email, companyId);
             if (userOptionalByEmail.isPresent()) {
                 User userByEmail = userOptionalByEmail.get();
                 if (userByEmail.getPhone() == null) {
@@ -482,7 +489,7 @@ public class SiteService {
                         build();
             }
         } if (isPhone) {
-            Optional<User> userOptionalByPhone = userRepository.findByPhone(phone);
+            Optional<User> userOptionalByPhone = userRepository.findByPhoneAndCompany_Id(phone, companyId);
             if (userOptionalByPhone.isPresent()) {
                 User userByPhone = userOptionalByPhone.get();
                 if (userByPhone.getEmail() == null) {
@@ -540,6 +547,8 @@ public class SiteService {
         }
         user.setCount(1);
         user.setRegisteredType(RegisteredType.WEBSITE);
+        user.setBot(botRepository.findById(botId).get());
+        user.setCompany(companyRepository.findById(companyId).get());
         User save = userRepository.save(user);
         return ApiResponse.<User>builder().
                 message("User saved!!!").
@@ -552,13 +561,16 @@ public class SiteService {
 
     @SneakyThrows
     public ResponseEntity<?> getQrCode(Long requestId, HttpServletResponse response) {
-        Optional<QrCode> qrCodeOptional = qrCodeRepository.findByRequest_Id(requestId);
-        if (qrCodeOptional.isEmpty() || !qrCodeOptional.get().getProduct().getCategory().getBot().getId().equals(botId)){
-            return ResponseEntity.badRequest().body("Not found!!!");
+        Optional<Request> requestOptional = requestRepository.findById(requestId);
+        if (requestOptional.isEmpty() || !requestOptional.get().getProduct().getCategory().getBot().getId().equals(botId)){
+            return ResponseEntity.badRequest().body("Request not found!!!");
         }
-        QrCode qrCode = qrCodeOptional.get();
+        Request request = requestOptional.get();
+        if (request.getUser() == null){
+            return ResponseEntity.badRequest().body("User not found!!!");
+        }
             response.setContentType("image/png");
-            byte[] qrCodeBytes = qrCodeService.generateQRCode(qrCode.getId().toString(), 500, 500);
+            byte[] qrCodeBytes = qrCodeService.generateQRCode(request.getUser().getQrcode().toString(), 500, 500);
             OutputStream outputStream = response.getOutputStream();
             outputStream.write(qrCodeBytes);
         return ResponseEntity.ok()

@@ -51,6 +51,7 @@ public class DataLoader implements CommandLineRunner {
             service.setBot(save);
             categoryRepository.save(service);
             categoryRepository.save(system);
+
         }
     }
 

@@ -10,6 +10,7 @@ import com.ibratclub.model.enums.Language;
 import com.ibratclub.model.enums.RegisteredType;
 import com.ibratclub.model.enums.State;
 import com.ibratclub.repository.BotRepository;
+import com.ibratclub.repository.CompanyRepository;
 import com.ibratclub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -37,6 +38,9 @@ public class TelegramBot extends TelegramLongPollingBot {
     private String botToken;
     @Value("${telegram.bot.id}")
     private Long botId;
+    @Value("${company.id}")
+    private Long companyId;
+    private final CompanyRepository companyRepository;
     private final BotService botService;
     private final UserRepository userRepository;
     private final BotRepository botRepository;
@@ -185,7 +189,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 if (!phoneNumber.startsWith("+")){
                                     phoneNumber = "+" + phoneNumber;
                                 }
-                                Optional<User> byPhone = userRepository.findByPhone(phoneNumber);
+                                Optional<User> byPhone = userRepository.findByPhoneAndBot_Id(phoneNumber, botId);
                                 user.setPhone(message.getContact().getPhoneNumber());
                                 user.setState(State.CONTACT);
                                 user.setLastOperationTime(LocalDateTime.now());
@@ -199,9 +203,11 @@ public class TelegramBot extends TelegramLongPollingBot {
                                     user1.setLanguage(user.getLanguage());
                                     user1.setChatId(user.getChatId());
                                     user1.setUsername(user.getUsername());
+                                    user1.setCompany(companyRepository.findById(companyId).get());
                                     userRepository.save(user1);
                                     userRepository.delete(user);
                                 } else {
+                                    user.setCompany(companyRepository.findById(companyId).get());
                                     userRepository.save(user);
                                 }
                                 execute(botService.menu(chatId, user.getLanguage()));

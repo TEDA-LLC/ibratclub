@@ -6,13 +6,14 @@ import com.ibratclub.model.enums.Gender;
 import com.ibratclub.model.enums.Language;
 import com.ibratclub.model.enums.RegisteredType;
 import com.ibratclub.model.enums.State;
-import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Malikov Azizjon  *  15.01.2023  *  18:01   *  IbratClub
@@ -68,5 +69,19 @@ public class User {
     @JsonIgnore
     @Enumerated(EnumType.STRING)
     private RegisteredType registeredType;
+
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator",
+            parameters = {
+                    @org.hibernate.annotations.Parameter(
+                            name = "uuid_gen_strategy_class",
+                            value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
+                    )
+            }
+    )
+    @Column(unique = true)
+    private UUID qrcode;
 
 }
