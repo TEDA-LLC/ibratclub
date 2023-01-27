@@ -44,7 +44,6 @@ public class BotService {
     private final WordHistoryRepository wordHistoryRepository;
     private final RequestRepository requestRepository;
     private final VacancyRepository vacancyRepository;
-    private final QrCodeRepository qrCodeRepository;
     private final BotRepository botRepository;
 
     public SendMessage start(String chatId) {
@@ -417,15 +416,11 @@ public class BotService {
                 user(currentUser).
                 build();
         Request savedRequest = requestRepository.save(request);
-        QrCode qrCode = new QrCode();
-        qrCode.setRequest(savedRequest);
-        qrCode.setUser(currentUser);
-        qrCode.setProduct(product);
-        QrCode saveQrCode = qrCodeRepository.save(qrCode);
+
         SendPhoto sendPhoto = new SendPhoto();
         ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
-        bb.putLong(saveQrCode.getId().getMostSignificantBits());
-        bb.putLong(saveQrCode.getId().getLeastSignificantBits());
+        bb.putLong(request.getUser().getQrcode().getMostSignificantBits());
+        bb.putLong(request.getUser().getQrcode().getLeastSignificantBits());
         InputFile inputFile = new InputFile(new ByteArrayInputStream(bb.array()).toString());
         sendPhoto.setPhoto(inputFile);
         sendPhoto.setChatId(update.getCallbackQuery().getMessage().getChatId());
