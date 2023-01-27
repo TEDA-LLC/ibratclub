@@ -2,12 +2,15 @@ package com.ibratclub.component;
 
 import com.ibratclub.model.Bot;
 import com.ibratclub.model.Category;
+import com.ibratclub.model.Company;
 import com.ibratclub.repository.BotRepository;
 import com.ibratclub.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @author Malikov Azizjon  *  17.01.2023  *  22:16   *  IbratClub
@@ -51,6 +54,8 @@ public class DataLoader implements CommandLineRunner {
             service.setBot(save);
             categoryRepository.save(service);
             categoryRepository.save(system);
+            Company company = new Company();
+            company.setBotList(List.of(save));
 
         }
     }

@@ -21,13 +21,13 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+//    @Column(unique = true)
     private String nameUz;
 
-    @Column(unique = true)
+//    @Column(unique = true)
     private String nameRu;
 
-    @Column(unique = true)
+//    @Column(unique = true)
     private String nameEn;
 
     @JsonIgnore
