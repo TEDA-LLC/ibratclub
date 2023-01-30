@@ -27,16 +27,14 @@ public interface ConstantRu {
             </b>Улучшение жизни народа Узбекистана, которая развивается сегодня.
             На этапе цифровой экономики оцифровка услуг многих предпринимателей и предложение их по доступной цене.
 
-            \uD83C\uDF10 <a href="https://teda.uz/"> teda.uz</a>
+            \uD83C\uDF10 <a href="https://ibrat.teda.uz/"> teda.uz</a>
             ☎ <b>+998 (93) 159 25 58</b>
             \uD83D\uDCE7 <b>ibratclub@gmail.com</b>
-            \uD83D\uDCCD <b>Г. Ташкент, Дустлик метро, Тошкент 700000</b>
-            \uD83D\uDCF8 <a href="https://instagram.com/teda.uz?igshid=YmMyMTA2M2Y="> @teda_uz</a>
+            \uD83D\uDCCD <b>Г. Термез, Байниминал, Фазилат улица 4/7</b>
+            \uD83D\uDCF8 <a href="https://www.instagram.com/ibrat_club/"> @ibrat_club</a>
             <b>Оставьте свой вопрос нашему менеджеру и</b>
             <b> наш менеджер ответит вам в ближайшее время.</b>
-            \uD83D\uDC64 <b>Менеджер : @ibrat</b>
-            \uD83C\uDFE6<b>Х/р: 20208000904456127001, РАКБ «ҚИШЛОҚҚУРИЛИШБАНК» Тошкент шаҳар регионал ф-ли</b>
-            <b>МФО: 01037 ИНН: 205985751  ОКЭД: 62010</b>
+            \uD83D\uDC64 <b>Менеджер : @ibrat_club_menejer</b>
             """;
     String VACANCY = "Вакансий пока нет \n" ;
     //            "\uD83D\uDC64 Менеджер : @Proekt_Manager\n";
