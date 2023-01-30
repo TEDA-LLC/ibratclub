@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author Malikov Azizjon  *  16.01.2023  *  18:45   *  IbratClub
  */
@@ -14,5 +16,6 @@ public interface UserHistoryRepository extends JpaRepository<UserHistory, Long> 
 
     @Query(value = "select count(id) as amount from user_history where product_id =:id",nativeQuery = true)
     long getAmountByProduct(@Param("id") long id);
+    List<UserHistory> findAllByUser_Bot_Id(Long botId);
 
 }

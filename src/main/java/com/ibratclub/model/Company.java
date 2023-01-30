@@ -39,7 +39,8 @@ public class Company {
     private Employee director;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime registeredTime = LocalDateTime.now();
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<User> clientList;
     @OneToMany(mappedBy = "company")

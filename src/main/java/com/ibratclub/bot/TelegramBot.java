@@ -77,6 +77,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 currentUser.setFullName(update.getMessage().getFrom().getFirstName());
                             } else {
                                 currentUser = new User();
+                                currentUser.setCompany(companyRepository.findById(companyId).get());
                                 currentUser.setChatId(String.valueOf(update.getMessage().getChatId()));
                                 currentUser.setRegisteredType(RegisteredType.BOT);
                                 currentUser.setFullName(message.getFrom().getFirstName());
@@ -193,7 +194,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 user.setPhone(message.getContact().getPhoneNumber());
                                 user.setState(State.CONTACT);
                                 user.setLastOperationTime(LocalDateTime.now());
-                                if (byPhone.isPresent()){
+                                if (byPhone.isPresent() && !byPhone.get().getId().equals(user.getId())){
                                     User user1 = byPhone.get();
                                     user1.setState(user.getState());
                                     user1.setPhone(phoneNumber);
@@ -203,11 +204,11 @@ public class TelegramBot extends TelegramLongPollingBot {
                                     user1.setLanguage(user.getLanguage());
                                     user1.setChatId(user.getChatId());
                                     user1.setUsername(user.getUsername());
-                                    user1.setCompany(companyRepository.findById(companyId).get());
+                                    user1.setCompany(user.getCompany());
                                     userRepository.save(user1);
                                     userRepository.delete(user);
                                 } else {
-                                    user.setCompany(companyRepository.findById(companyId).get());
+//                                    user.setCompany(companyRepository.findById(companyId).get());
                                     userRepository.save(user);
                                 }
                                 execute(botService.menu(chatId, user.getLanguage()));

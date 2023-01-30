@@ -13,9 +13,16 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review,Long> {
 
-    List<Review> findAllByConfirmationTrue();
-    @Query(value = "SELECT * FROM review r where r.confirmation = true ORDER BY date_time DESC LIMIT 10", nativeQuery = true)
-    List<Review> findAllByConfirmationTrueForUsers();
-    List<Review> findAllByConfirmationFalse();
+    List<Review> findAllByConfirmationTrueAndUser_Bot_Id(Long botId);
+    @Query(value = """
+            SELECT r.id as id, confirmation, date_time as dataTime, text, user_id as "user"
+            FROM review r
+                     inner join users u on u.id = r.user_id
+            where r.confirmation = true
+              and u.company_id = ?1
+            ORDER BY date_time DESC
+            LIMIT 10""", nativeQuery = true)
+    List<Review> findAllByConfirmationTrueForUsers(Long companyId);
+    List<Review> findAllByConfirmationFalseAndUser_Bot_Id(Long botId);
 
 }

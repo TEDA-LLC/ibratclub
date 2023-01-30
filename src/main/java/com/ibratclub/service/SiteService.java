@@ -41,7 +41,6 @@ public class SiteService {
     private final ReviewRepository reviewRepository;
     private final TelegramBot telegramBot;
     private final ProductRepository productRepository;
-
     private final QRCodeService qrCodeService;
     private final BotRepository botRepository;
     private final CompanyRepository companyRepository;
@@ -272,7 +271,7 @@ public class SiteService {
     }
 
     public ApiResponse<List<Request>> getRequest() {
-        List<Request> requests = requestRepository.findAll();
+        List<Request> requests = requestRepository.findAllByProduct_Category_Bot_Id(botId);
         if (requests.isEmpty()) {
             return ApiResponse.<List<Request>>builder().
                     message("Requests are not found !").
@@ -289,7 +288,7 @@ public class SiteService {
     }
 
     public ApiResponse<List<SiteHistory>> getSiteHistory() {
-        List<SiteHistory> siteHistories = siteHistoryRepository.findAll();
+        List<SiteHistory> siteHistories = siteHistoryRepository.findAllByUser_Company_Id(companyId);
         if (siteHistories.isEmpty()) {
             return ApiResponse.<List<SiteHistory>>builder().
                     message("History are not found !").
@@ -378,10 +377,10 @@ public class SiteService {
             reviewList = reviewRepository.findAll();
 
         if (Boolean.FALSE.equals(active))
-            reviewList = reviewRepository.findAllByConfirmationFalse();
+            reviewList = reviewRepository.findAllByConfirmationFalseAndUser_Bot_Id(botId);
 
         if (Boolean.TRUE.equals(active))
-            reviewList = reviewRepository.findAllByConfirmationTrue();
+            reviewList = reviewRepository.findAllByConfirmationTrueAndUser_Bot_Id(botId);
 
         assert reviewList != null;
         reviewList.sort(Comparator.comparing(Review::getDateTime));
@@ -401,9 +400,9 @@ public class SiteService {
                 build();
     }
 
-    public ApiResponse<List<Review>> getReviewforUsers() {
+    public ApiResponse<List<Review>> getReviewForUsers() {
 
-        List<Review> reviewList = reviewRepository.findAllByConfirmationTrueForUsers();
+        List<Review> reviewList = reviewRepository.findAllByConfirmationTrueForUsers(companyId);
 
         if (reviewList.isEmpty()) {
             return ApiResponse.<List<Review>>builder().
@@ -430,7 +429,7 @@ public class SiteService {
                     status(400).
                     build();
         }
-        List<Request> requestList = requestRepository.findAllByUser(userOptional.get(), Sort.by(Sort.Direction.ASC, "dateTime"));
+        List<Request> requestList = requestRepository.findAllByUserAndProduct_Category_Bot_Id(userOptional.get(), botId, Sort.by(Sort.Direction.ASC, "dateTime"));
         Map<String, List<Request>> collect = requestList.stream().collect(Collectors.groupingBy(Request::getCategory));
         return ApiResponse.<Map<String, List<Request>>>builder().
                 message("Here!!!").

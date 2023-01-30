@@ -1,5 +1,6 @@
 package com.ibratclub.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 /**
@@ -15,6 +16,7 @@ public class ApiResponse<T> {
 
     private String message;
     private boolean success;
+    @JsonIgnore
     private int status;
     private T data;
 

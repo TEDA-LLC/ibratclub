@@ -409,14 +409,20 @@ public class BotService {
         Long productId = Long.valueOf(data.substring(8));
         Optional<Product> productOptional = productRepository.findById(productId);
         Product product = productOptional.get();
-        Request request = Request.builder().
-                aboutProduct(product.getNameEn()).
-                registeredType(RegisteredType.BOT).
-                dateTime(LocalDateTime.now()).
-                user(currentUser).
-                product(product).
-                build();
-        Request savedRequest = requestRepository.save(request);
+        List<Request> requestList = requestRepository.findAllByProductAndUser_Phone(product, currentUser.getPhone());
+        Request request;
+        if (requestList.isEmpty()){
+             request = Request.builder().
+                    aboutProduct(product.getNameEn()).
+                    registeredType(RegisteredType.BOT).
+                    dateTime(LocalDateTime.now()).
+                    user(currentUser).
+                    product(product).
+                    build();
+        }else {
+            request = requestList.get(0);
+        }
+        requestRepository.save(request);
 
         SendPhoto sendPhoto = new SendPhoto();
         ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
@@ -511,7 +517,7 @@ public class BotService {
 
     public SendMessage vacancies(String chatId, User currentUser) {
 
-        List<Vacancy> vacancies = vacancyRepository.findAllByActiveTrue();
+        List<Vacancy> vacancies = vacancyRepository.findAllByActiveTrueAndBot_Id(botId);
 
         if (vacancies.isEmpty()){
             SendMessage sendMessage = new SendMessage();
