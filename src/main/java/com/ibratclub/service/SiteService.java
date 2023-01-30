@@ -41,7 +41,6 @@ public class SiteService {
     private final ReviewRepository reviewRepository;
     private final TelegramBot telegramBot;
     private final ProductRepository productRepository;
-
     private final QRCodeService qrCodeService;
     private final BotRepository botRepository;
     private final CompanyRepository companyRepository;

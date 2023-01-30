@@ -6,9 +6,25 @@ import com.ibratclub.model.enums.Gender;
 import com.ibratclub.model.enums.Language;
 import com.ibratclub.model.enums.RegisteredType;
 import com.ibratclub.model.enums.State;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,11 +49,13 @@ public class User {
     //    @Column(unique = true)
     private String phone, email;
     //    @Column(unique = true)
+    @JsonIgnore
     private String chatId;
     @Enumerated(EnumType.STRING)
     @JsonIgnore
     private State state;
     @Enumerated(EnumType.STRING)
+    @JsonIgnore
     private Gender gender;
     private String passportNumber;
     @Enumerated(EnumType.STRING)
@@ -49,6 +67,7 @@ public class User {
     @JsonIgnore
     private Avatar avatar;
     @ManyToOne
+    @JsonIgnore
     private Company company;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
