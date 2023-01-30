@@ -288,7 +288,7 @@ public class SiteService {
     }
 
     public ApiResponse<List<SiteHistory>> getSiteHistory() {
-        List<SiteHistory> siteHistories = siteHistoryRepository.findAll();
+        List<SiteHistory> siteHistories = siteHistoryRepository.findAllByUser_Company_Id(companyId);
         if (siteHistories.isEmpty()) {
             return ApiResponse.<List<SiteHistory>>builder().
                     message("History are not found !").
@@ -377,10 +377,10 @@ public class SiteService {
             reviewList = reviewRepository.findAll();
 
         if (Boolean.FALSE.equals(active))
-            reviewList = reviewRepository.findAllByConfirmationFalse();
+            reviewList = reviewRepository.findAllByConfirmationFalseAndUser_Bot_Id(botId);
 
         if (Boolean.TRUE.equals(active))
-            reviewList = reviewRepository.findAllByConfirmationTrue();
+            reviewList = reviewRepository.findAllByConfirmationTrueAndUser_Bot_Id(botId);
 
         assert reviewList != null;
         reviewList.sort(Comparator.comparing(Review::getDateTime));
@@ -429,7 +429,7 @@ public class SiteService {
                     status(400).
                     build();
         }
-        List<Request> requestList = requestRepository.findAllByUserAndProduct_Category_Bot_Id(userOptional.get(),botId, Sort.by(Sort.Direction.ASC, "dateTime"));
+        List<Request> requestList = requestRepository.findAllByUserAndProduct_Category_Bot_Id(userOptional.get(), botId, Sort.by(Sort.Direction.ASC, "dateTime"));
         Map<String, List<Request>> collect = requestList.stream().collect(Collectors.groupingBy(Request::getCategory));
         return ApiResponse.<Map<String, List<Request>>>builder().
                 message("Here!!!").
