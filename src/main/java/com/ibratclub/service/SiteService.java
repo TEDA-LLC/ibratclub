@@ -271,7 +271,7 @@ public class SiteService {
     }
 
     public ApiResponse<List<Request>> getRequest() {
-        List<Request> requests = requestRepository.findAll();
+        List<Request> requests = requestRepository.findAllByProduct_Category_Bot_Id(botId);
         if (requests.isEmpty()) {
             return ApiResponse.<List<Request>>builder().
                     message("Requests are not found !").
@@ -400,9 +400,9 @@ public class SiteService {
                 build();
     }
 
-    public ApiResponse<List<Review>> getReviewforUsers() {
+    public ApiResponse<List<Review>> getReviewForUsers() {
 
-        List<Review> reviewList = reviewRepository.findAllByConfirmationTrueForUsers();
+        List<Review> reviewList = reviewRepository.findAllByConfirmationTrueForUsers(companyId);
 
         if (reviewList.isEmpty()) {
             return ApiResponse.<List<Review>>builder().
@@ -429,7 +429,7 @@ public class SiteService {
                     status(400).
                     build();
         }
-        List<Request> requestList = requestRepository.findAllByUser(userOptional.get(), Sort.by(Sort.Direction.ASC, "dateTime"));
+        List<Request> requestList = requestRepository.findAllByUserAndProduct_Category_Bot_Id(userOptional.get(),botId, Sort.by(Sort.Direction.ASC, "dateTime"));
         Map<String, List<Request>> collect = requestList.stream().collect(Collectors.groupingBy(Request::getCategory));
         return ApiResponse.<Map<String, List<Request>>>builder().
                 message("Here!!!").

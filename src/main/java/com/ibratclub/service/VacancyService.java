@@ -3,9 +3,11 @@ package com.ibratclub.service;
 import com.ibratclub.dto.ApiResponse;
 import com.ibratclub.dto.VacancyDTO;
 import com.ibratclub.model.Vacancy;
+import com.ibratclub.repository.BotRepository;
 import com.ibratclub.repository.VacancyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +19,14 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class VacancyService {
+    @Value("${telegram.bot.id}")
+    private Long botId;
 
     private final VacancyRepository vacancyRepository;
+    private final BotRepository botRepository;
 
     public ApiResponse<List<Vacancy>> getAll() {
-        List<Vacancy> vacancies = vacancyRepository.findAll();
+        List<Vacancy> vacancies = vacancyRepository.findAllByActiveTrueAndBot_Id(botId);
         if (vacancies.isEmpty()) {
             return ApiResponse.<List<Vacancy>>builder().
                     message("Not Found").
@@ -40,10 +45,10 @@ public class VacancyService {
 
     public ApiResponse<Vacancy> getOne(Long id) {
         Optional<Vacancy> optionalVacancy = vacancyRepository.findById(id);
-        if (optionalVacancy.isEmpty()) {
+        if (optionalVacancy.isEmpty() || !optionalVacancy.get().getBot().getId().equals(botId)) {
             return ApiResponse.<Vacancy>builder().
                     message("Not Found").
-                    status(204).
+                    status(400).
                     success(false).
                     build();
         } else {
@@ -76,6 +81,7 @@ public class VacancyService {
         vacancy.setName(vacancyDTO.getName());
         vacancy.setDescription(vacancyDTO.getDescription());
         vacancy.setActive(vacancyDTO.isActive());
+        vacancy.setBot(botRepository.findById(botId).get());
 //        vacancy.setActive(productDTO.getPrice());
 
         vacancyRepository.save(vacancy);
@@ -91,10 +97,10 @@ public class VacancyService {
     public ApiResponse<?> edit(VacancyDTO vacancyDTO, Long id) {
         Optional<Vacancy> optionalVacancy = vacancyRepository.findById(id);
 //        Optional<Vacancy> optionalCategory = categoryRepository.findById(productDTO.getCategoryId());
-        if (optionalVacancy.isEmpty()) {
+        if (optionalVacancy.isEmpty() || !optionalVacancy.get().getBot().getId().equals(botId)) {
             return ApiResponse.builder().
                     message("Vacancy Not Found").
-                    status(204).
+                    status(400).
                     success(false).
                     build();
         }
@@ -133,10 +139,10 @@ public class VacancyService {
 
     public ApiResponse<?> delete(Long id) {
         Optional<Vacancy> optionalVacancy = vacancyRepository.findById(id);
-        if (optionalVacancy.isEmpty()) {
+        if (optionalVacancy.isEmpty() || optionalVacancy.get().getBot().getId().equals(botId)) {
             return ApiResponse.builder().
                     message("Vacancy Not Found").
-                    status(204).
+                    status(400).
                     success(false).
                     build();
         }

@@ -92,7 +92,7 @@ public class SiteController {
 
     @GetMapping("/reviewusers")
     public ResponseEntity<?> getReviewforUsers(){
-        ApiResponse<List<Review>> response = siteService.getReviewforUsers();
+        ApiResponse<List<Review>> response = siteService.getReviewForUsers();
         return ResponseEntity.status(response.getStatus()).body(response);
     }
     @GetMapping("/requestsByUser/{id}")

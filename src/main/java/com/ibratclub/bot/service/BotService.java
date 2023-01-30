@@ -517,7 +517,7 @@ public class BotService {
 
     public SendMessage vacancies(String chatId, User currentUser) {
 
-        List<Vacancy> vacancies = vacancyRepository.findAllByActiveTrue();
+        List<Vacancy> vacancies = vacancyRepository.findAllByActiveTrueAndBot_Id(botId);
 
         if (vacancies.isEmpty()){
             SendMessage sendMessage = new SendMessage();
