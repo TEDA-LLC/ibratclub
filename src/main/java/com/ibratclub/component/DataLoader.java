@@ -31,14 +31,14 @@ public class DataLoader implements CommandLineRunner {
 //            Bot bot = new Bot();
 //            bot.setToken("5432072116:AAHHjQHDP-IBzzQdiRyzHhqValr5tKQ6tlI");
 //            bot.setUsername("tedauz_bot");
-//            Bot bot1 = new Bot();
-//            bot1.setUsername("Uzb_Namaz_Times_bot");
-//            bot1.setToken("5082104093:AAEtEN22_VScHuRU7mgdvI8H-1p6v8hn8KU");
+            Bot bot1 = new Bot();
+            bot1.setUsername("Uzb_Namaz_Times_bot");
+            bot1.setToken("5082104093:AAEtEN22_VScHuRU7mgdvI8H-1p6v8hn8KU");
             Bot bot2 = new Bot();
             bot2.setUsername("ibratclub_bot");
             bot2.setToken("5927728152:AAExhfEpagD__0D9A6b_qJs56SuXV06oZ-8");
 //            botRepository.save(bot);
-//            botRepository.save(bot1);
+            botRepository.save(bot1);
             Bot save = botRepository.save(bot2);
             Category service = Category.builder()
                     .nameUz("Xizmatlar \uD83D\uDEE0")
