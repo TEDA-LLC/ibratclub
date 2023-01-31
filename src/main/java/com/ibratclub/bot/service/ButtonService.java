@@ -265,17 +265,17 @@ public class ButtonService {
 
         if (language.equals(Language.UZB)) {
             buttons.add(Arrays.asList(
-                    InlineKeyboardButton.builder().text(ConstantUz.IN_DETAIL).url("https://teda.uz/").build(),
+                    InlineKeyboardButton.builder().text(ConstantUz.IN_DETAIL).url("https://ibrat.teda.uz/").build(),
                     InlineKeyboardButton.builder().text(ConstantUz.REQUEST).callbackData("$request" + product.getId()).build()));
             buttons.add(Collections.singletonList(InlineKeyboardButton.builder().text(ConstantUz.BACK).callbackData("$back" + product.getCategory().getId()).build()));
         } else if (language.equals(Language.ENG)) {
             buttons.add(Arrays.asList(
-                    InlineKeyboardButton.builder().text(ConstantEn.IN_DETAIL).url("https://teda.uz/").build(),
+                    InlineKeyboardButton.builder().text(ConstantEn.IN_DETAIL).url("https://ibrat.teda.uz/").build(),
                     InlineKeyboardButton.builder().text(ConstantEn.REQUEST).callbackData("$request" + product.getId()).build()));
             buttons.add(Collections.singletonList(InlineKeyboardButton.builder().text(ConstantEn.BACK).callbackData("$back" + product.getCategory().getId()).build()));
         } else {
             buttons.add(Arrays.asList(
-                    InlineKeyboardButton.builder().text(ConstantRu.IN_DETAIL).url("https://teda.uz/").build(),
+                    InlineKeyboardButton.builder().text(ConstantRu.IN_DETAIL).url("https://ibrat.teda.uz/").build(),
                     InlineKeyboardButton.builder().text(ConstantRu.REQUEST).callbackData("$request" + product.getId()).build()));
             buttons.add(Collections.singletonList(InlineKeyboardButton.builder().text(ConstantRu.BACK).callbackData("$back" + product.getCategory().getId()).build()));
         }
