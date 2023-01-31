@@ -22,5 +22,6 @@ public interface RequestRepository extends JpaRepository<Request,Long> {
     List<Request> findAllByProduct_Category_Bot_Id(Long botId);
     List<Request> findAllByProductAndUser_Email(Product product, String email);
     List<Request> findAllByProductAndUser_Phone(Product product, String phone);
+    List<Request> findAllByProductAndUser(Product product, User user);
     Page<Request> findAllByView(boolean view, Pageable pageable);
 }

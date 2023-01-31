@@ -65,82 +65,96 @@ public class SiteService {
         request.setProduct(product);
         if (dto.getCategory() != null)
             request.setCategory(dto.getCategory());
-
-        if (isPhone) {
-            Optional<User> userOptionalByPhone = userRepository.findByPhoneAndCompany_Id(dto.getPhone(), companyId);
-            if (userOptionalByPhone.isPresent()) {
-                User user = userOptionalByPhone.get();
-                if (dto.getName() != null && !dto.getName().equals(""))
-                    user.setFullName(dto.getName());
-                user.setLastOperationTime(LocalDateTime.now());
-                user.setCount(user.getCount() + 1);
-                user.setEmail(dto.getEmail());
-                User userSave = userRepository.save(user);
-                request.setUser(userSave);
-                List<Request> requestList = requestRepository.findAllByProductAndUser_Phone(product, user.getPhone());
-                if (!requestList.isEmpty()) {
-                    return ApiResponse.builder().
+        ApiResponse<User> response = login(dto.getEmail(), dto.getPhone());
+        if (!response.isSuccess()){
+            return response;
+        }
+        User user = response.getData();
+        List<Request> requestList = requestRepository.findAllByProductAndUser(product, user);
+        if (!requestList.isEmpty()){
+            return ApiResponse.builder().
                             message("Request was added !").
                             status(200).
                             success(true).
                             data(requestList.get(0)).
                             build();
-                }
-                Request save = requestRepository.save(request);
-//                QrCode qrCode = new QrCode();
-//                qrCode.setRequest(save);
-//                qrCode.setUser(user);
-//                qrCode.setProduct(productOptional.get());
-//                qrCodeRepository.save(qrCode);
-                return ApiResponse.builder().
-                        message("Request saved!").
-                        status(201).
-                        success(true).
-                        data(save).
-                        build();
-            }
         }
 
-        if (isEmail) {
-            Optional<User> userOptionalByEmail = userRepository.findByEmailAndCompany_Id(dto.getEmail(), companyId);
-            if (userOptionalByEmail.isPresent()) {
-                User user = userOptionalByEmail.get();
-                user.setLastOperationTime(LocalDateTime.now());
-                user.setCount(user.getCount() + 1);
-                user.setPhone(dto.getPhone());
-                User userSave = userRepository.save(user);
-                request.setUser(userSave);
-                List<Request> requestList = requestRepository.findAllByProductAndUser_Email(product, user.getEmail());
-                if (!requestList.isEmpty()) {
-                    return ApiResponse.builder().
-                            message("Request was added !").
-                            status(200).
-                            success(true).
-                            data(requestList.get(0)).
-                            build();
-                }
-                Request save = requestRepository.save(request);
-                return ApiResponse.builder().
-                        message("Request saved!").
-                        status(201).
-                        success(true).
-                        data(save).
-                        build();
-            }
-        }
-
-
-        User user = new User();
-        user.setFullName(dto.getName());
-        user.setPhone(dto.getPhone());
-        user.setCount(1);
-        user.setEmail(dto.getEmail());
-        user.setRegisteredTime(LocalDateTime.now());
-        user.setRegisteredType(RegisteredType.WEBSITE);
-        user.setBot(botRepository.findById(botId).get());
-        user.setCompany(companyRepository.findById(companyId).get());
-        User userSave = userRepository.save(user);
-        request.setUser(userSave);
+//        if (isPhone) {
+//            Optional<User> userOptionalByPhone = userRepository.findByPhoneAndCompany_Id(dto.getPhone(), companyId);
+//            if (userOptionalByPhone.isPresent()) {
+//                User user = userOptionalByPhone.get();
+//                if (dto.getName() != null && !dto.getName().equals(""))
+//                    user.setFullName(dto.getName());
+//                user.setLastOperationTime(LocalDateTime.now());
+//                user.setCount(user.getCount() + 1);
+//                user.setEmail(dto.getEmail());
+//                User userSave = userRepository.save(user);
+//                request.setUser(userSave);
+//                List<Request> requestList = requestRepository.findAllByProductAndUser_Phone(product, user.getPhone());
+//                if (!requestList.isEmpty()) {
+//                    return ApiResponse.builder().
+//                            message("Request was added !").
+//                            status(200).
+//                            success(true).
+//                            data(requestList.get(0)).
+//                            build();
+//                }
+//                Request save = requestRepository.save(request);
+////                QrCode qrCode = new QrCode();
+////                qrCode.setRequest(save);
+////                qrCode.setUser(user);
+////                qrCode.setProduct(productOptional.get());
+////                qrCodeRepository.save(qrCode);
+//                return ApiResponse.builder().
+//                        message("Request saved!").
+//                        status(201).
+//                        success(true).
+//                        data(save).
+//                        build();
+//            }
+//        }
+//
+//        if (isEmail) {
+//            Optional<User> userOptionalByEmail = userRepository.findByEmailAndCompany_Id(dto.getEmail(), companyId);
+//            if (userOptionalByEmail.isPresent()) {
+//                User user = userOptionalByEmail.get();
+//                user.setLastOperationTime(LocalDateTime.now());
+//                user.setCount(user.getCount() + 1);
+//                user.setPhone(dto.getPhone());
+//                User userSave = userRepository.save(user);
+//                request.setUser(userSave);
+//                List<Request> requestList = requestRepository.findAllByProductAndUser_Email(product, user.getEmail());
+//                if (!requestList.isEmpty()) {
+//                    return ApiResponse.builder().
+//                            message("Request was added !").
+//                            status(200).
+//                            success(true).
+//                            data(requestList.get(0)).
+//                            build();
+//                }
+//                Request save = requestRepository.save(request);
+//                return ApiResponse.builder().
+//                        message("Request saved!").
+//                        status(201).
+//                        success(true).
+//                        data(save).
+//                        build();
+//            }
+//        }
+//
+//
+//        User user = new User();
+//        user.setFullName(dto.getName());
+//        user.setPhone(dto.getPhone());
+//        user.setCount(1);
+//        user.setEmail(dto.getEmail());
+//        user.setRegisteredTime(LocalDateTime.now());
+//        user.setRegisteredType(RegisteredType.WEBSITE);
+//        user.setBot(botRepository.findById(botId).get());
+//        user.setCompany(companyRepository.findById(companyId).get());
+//        User userSave = userRepository.save(user);
+        request.setUser(user);
         Request save = requestRepository.save(request);
         return ApiResponse.builder().
                 message("Request saved!").
