@@ -4,13 +4,16 @@ import com.ibratclub.bot.constant.ConstantEn;
 import com.ibratclub.bot.constant.ConstantRu;
 import com.ibratclub.bot.constant.ConstantUz;
 import com.ibratclub.bot.service.BotService;
+import com.ibratclub.model.Address;
 import com.ibratclub.model.Bot;
+import com.ibratclub.model.Product;
 import com.ibratclub.model.User;
 import com.ibratclub.model.enums.Language;
 import com.ibratclub.model.enums.RegisteredType;
 import com.ibratclub.model.enums.State;
 import com.ibratclub.repository.BotRepository;
 import com.ibratclub.repository.CompanyRepository;
+import com.ibratclub.repository.ProductRepository;
 import com.ibratclub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -44,6 +47,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final BotService botService;
     private final UserRepository userRepository;
     private final BotRepository botRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public String getBotUsername() {
@@ -187,14 +191,14 @@ public class TelegramBot extends TelegramLongPollingBot {
                         switch (user.getState()) {
                             case START -> {
                                 String phoneNumber = message.getContact().getPhoneNumber();
-                                if (!phoneNumber.startsWith("+")){
+                                if (!phoneNumber.startsWith("+")) {
                                     phoneNumber = "+" + phoneNumber;
                                 }
                                 Optional<User> byPhone = userRepository.findByPhoneAndBot_Id(phoneNumber, botId);
                                 user.setPhone(message.getContact().getPhoneNumber());
                                 user.setState(State.CONTACT);
                                 user.setLastOperationTime(LocalDateTime.now());
-                                if (byPhone.isPresent() && !byPhone.get().getId().equals(user.getId())){
+                                if (byPhone.isPresent() && !byPhone.get().getId().equals(user.getId())) {
                                     User user1 = byPhone.get();
                                     user1.setState(user.getState());
                                     user1.setPhone(phoneNumber);
@@ -249,6 +253,14 @@ public class TelegramBot extends TelegramLongPollingBot {
                             } else if (callbackQuery.getData().startsWith("$request")) {
                                 currentUser.setLastOperationTime(LocalDateTime.now());
                                 execute(botService.saveRequest(update, currentUser));
+                                Long productId = Long.valueOf(update.getCallbackQuery().getData().substring(8));
+                                Optional<Product> productOptional = productRepository.findById(productId);
+                                if (productOptional.isPresent() && productOptional.get().getAddress() != null) {
+                                    Address address = productOptional.get().getAddress();
+                                    if (address.getLongitude() != null && address.getLatitude() != null) {
+                                        execute(botService.getLocation(update, currentUser));
+                                    }
+                                }
                             }
                         }
                     }

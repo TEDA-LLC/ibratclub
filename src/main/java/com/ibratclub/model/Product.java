@@ -1,5 +1,6 @@
 package com.ibratclub.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * @author Malikov Azizjon  *  16.01.2023  *  17:42   *  IbratClub
@@ -37,6 +39,10 @@ public class Product {
     private Double price;
 
     private Integer minimumTerm;
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private LocalDateTime from, to;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Address address;
 
     private String executionInterval;
     @Builder.Default

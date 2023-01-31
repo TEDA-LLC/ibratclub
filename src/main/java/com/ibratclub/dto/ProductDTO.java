@@ -16,7 +16,7 @@ public class ProductDTO {
     private String nameUz, nameRu, nameEn, descriptionUz, descriptionRu, descriptionEn;
 
     private Long categoryId;
-
+    private AddressDTO address;
     private MultipartFile attachment;
 
     private Double price;

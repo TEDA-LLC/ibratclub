@@ -1,12 +1,12 @@
 package com.ibratclub.service;
 
+import com.ibratclub.dto.AddressDTO;
 import com.ibratclub.dto.ApiResponse;
 import com.ibratclub.dto.ProductDTO;
-import com.ibratclub.model.Attachment;
-import com.ibratclub.model.Category;
-import com.ibratclub.model.Product;
+import com.ibratclub.model.*;
 import com.ibratclub.repository.AttachmentRepository;
 import com.ibratclub.repository.CategoryRepository;
+import com.ibratclub.repository.DistrictRepository;
 import com.ibratclub.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -31,6 +31,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final AttachmentRepository attachmentRepository;
+    private final DistrictRepository districtRepository;
 
     public ApiResponse<List<Product>> getAll() {
         List<Product> products = productRepository.findAllByActiveTrueAndCategory_Bot_Id(botId);
@@ -67,12 +68,12 @@ public class ProductService {
         if (categoryOptional.isEmpty() || !categoryOptional.get().getBot().getId().equals(botId)) {
             return ApiResponse.builder().
                     message("Category not found").
-                    status(204).
+                    status(400).
                     success(false).
                     build();
         }
         Product product = new Product();
-        if (productDTO.getAttachment() != null) {
+        if (productDTO.getAttachment() != null && !productDTO.getAttachment().isEmpty()) {
             MultipartFile photo = productDTO.getAttachment();
             Attachment attachment = new Attachment();
             attachment.setBytes(photo.getBytes());
@@ -80,6 +81,23 @@ public class ProductService {
             attachment.setContentType(photo.getContentType());
             attachment.setSize(photo.getSize());
             product.setAttachment(attachment);
+        }
+        if (productDTO.getAddress() != null) {
+            AddressDTO addressDTO = productDTO.getAddress();
+            Address address = new Address();
+            Optional<District> districtOptional = districtRepository.findById(addressDTO.getDistrictId());
+            if (districtOptional.isEmpty()) {
+                return ApiResponse.builder().
+                        message("District not found").
+                        status(400).
+                        success(false).
+                        build();
+            }
+            address.setDistrict(districtOptional.get());
+            address.setLatitude(addressDTO.getLatitude());
+            address.setLongitude(addressDTO.getLongitude());
+            address.setStreetHome(addressDTO.getStreetHome());
+            product.setAddress(address);
         }
         product.setCategory(categoryOptional.get());
         product.setPrice(productDTO.getPrice());
@@ -128,6 +146,26 @@ public class ProductService {
             attachment.setContentType(photo.getContentType());
             attachment.setSize(photo.getSize());
             product.setAttachment(attachment);
+        }
+        if (productDTO.getAddress() != null) {
+            AddressDTO addressDTO = productDTO.getAddress();
+            Address address = new Address();
+            if (product.getAddress() != null) {
+                address = product.getAddress();
+            }
+            Optional<District> districtOptional = districtRepository.findById(addressDTO.getDistrictId());
+            if (districtOptional.isEmpty()) {
+                return ApiResponse.builder().
+                        message("District not found").
+                        status(400).
+                        success(false).
+                        build();
+            }
+            address.setDistrict(districtOptional.get());
+            address.setLatitude(addressDTO.getLatitude());
+            address.setLongitude(addressDTO.getLongitude());
+            address.setStreetHome(addressDTO.getStreetHome());
+            product.setAddress(address);
         }
         product.setNameUz(productDTO.getNameUz());
         product.setNameRu(productDTO.getNameRu());

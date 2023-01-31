@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.send.SendLocation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -116,18 +117,18 @@ public class BotService {
 //
 //            sendMessage.setReplyMarkup(buttonService.menuButton(language));
 //            return sendMessage;
-            SendPhoto sendPhoto = new SendPhoto();
-            sendPhoto.setParseMode("HTML");
-            if (language.equals(Language.UZB))
-                sendPhoto.setCaption(ConstantUz.ABOUT_US);
-            else if (language.equals(Language.RUS))
-                sendPhoto.setCaption(ConstantRu.ABOUT_US);
-            else sendPhoto.setCaption(ConstantEn.ABOUT_US);
-            sendPhoto.setPhoto(new InputFile(new ByteArrayInputStream(bot.getLogo().getBytes()), bot.getLogo().getOriginalName()));
-            sendPhoto.setChatId(chatId);
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setParseMode("HTML");
+        if (language.equals(Language.UZB))
+            sendPhoto.setCaption(ConstantUz.ABOUT_US);
+        else if (language.equals(Language.RUS))
+            sendPhoto.setCaption(ConstantRu.ABOUT_US);
+        else sendPhoto.setCaption(ConstantEn.ABOUT_US);
+        sendPhoto.setPhoto(new InputFile(new ByteArrayInputStream(bot.getLogo().getBytes()), bot.getLogo().getOriginalName()));
+        sendPhoto.setChatId(chatId);
 
-            sendPhoto.setReplyMarkup(buttonService.menuButton(language));
-            return sendPhoto;
+        sendPhoto.setReplyMarkup(buttonService.menuButton(language));
+        return sendPhoto;
 
     }
 
@@ -349,7 +350,14 @@ public class BotService {
         userHistory.setUser(currentUser);
         userHistory.setProduct(product);
         userHistoryRepository.save(userHistory);
-
+        builder.append(product.getFrom().toString());
+        builder.append(" - ");
+        builder.append(product.getTo().toString());
+        builder.append("\n");
+        builder.append("Address: ");
+        builder.append(product.getAddress().getDistrict().getName());
+        builder.append(" ");
+        builder.append(product.getAddress().getStreetHome());
         sendPhoto.setCaption(String.valueOf(builder));
 
         InputFile inputFile = new InputFile(new ByteArrayInputStream(product.getAttachment().getBytes()), product.getAttachment().getOriginalName());
@@ -411,15 +419,15 @@ public class BotService {
         Product product = productOptional.get();
         List<Request> requestList = requestRepository.findAllByProductAndUser_Phone(product, currentUser.getPhone());
         Request request;
-        if (requestList.isEmpty()){
-             request = Request.builder().
+        if (requestList.isEmpty()) {
+            request = Request.builder().
                     aboutProduct(product.getNameEn()).
                     registeredType(RegisteredType.BOT).
                     dateTime(LocalDateTime.now()).
                     user(currentUser).
                     product(product).
                     build();
-        }else {
+        } else {
             request = requestList.get(0);
         }
         requestRepository.save(request);
@@ -519,7 +527,7 @@ public class BotService {
 
         List<Vacancy> vacancies = vacancyRepository.findAllByActiveTrueAndBot_Id(botId);
 
-        if (vacancies.isEmpty()){
+        if (vacancies.isEmpty()) {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(chatId);
             if (currentUser.getLanguage().equals(Language.ENG))
@@ -576,4 +584,13 @@ public class BotService {
                 .build();
     }
 
+    public SendLocation getLocation(Update update, User currentUser) {
+        Optional<Product> productOptional = productRepository.findById(Long.valueOf(update.getCallbackQuery().getData()));
+        Product product = productOptional.get();
+        SendLocation sendLocation = new SendLocation();
+        sendLocation.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
+        sendLocation.setLatitude(product.getAddress().getLatitude());
+        sendLocation.setLongitude(product.getAddress().getLongitude());
+        return sendLocation;
+    }
 }

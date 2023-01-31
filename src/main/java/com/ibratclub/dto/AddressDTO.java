@@ -15,7 +15,7 @@ import lombok.*;
 public class AddressDTO {
 
     private Long districtId;
-
+    private Double latitude, longitude;
     private String streetHome;
 
 }
