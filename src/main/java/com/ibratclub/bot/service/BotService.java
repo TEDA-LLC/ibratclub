@@ -608,7 +608,8 @@ public class BotService {
     }
 
     public SendLocation getLocation(Update update, User currentUser) {
-        Optional<Product> productOptional = productRepository.findById(Long.valueOf(update.getCallbackQuery().getData()));
+        Long productId = Long.valueOf(update.getCallbackQuery().getData().substring(8));
+        Optional<Product> productOptional = productRepository.findById(Long.valueOf(productId));
         Product product = productOptional.get();
         SendLocation sendLocation = new SendLocation();
         sendLocation.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
