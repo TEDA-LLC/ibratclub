@@ -1,5 +1,9 @@
 package com.ibratclub.bot.service;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.ibratclub.bot.constant.ConstantEn;
 import com.ibratclub.bot.constant.ConstantRu;
 import com.ibratclub.bot.constant.ConstantUz;
@@ -9,6 +13,7 @@ import com.ibratclub.model.enums.RegisteredType;
 import com.ibratclub.repository.*;
 import com.ibratclub.specification.*;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,9 +28,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import java.io.ByteArrayInputStream;
-import java.nio.ByteBuffer;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -411,6 +417,7 @@ public class BotService {
         wordHistoryRepository.save(wordsHistory);
     }
 
+    @SneakyThrows
     public SendPhoto saveRequest(Update update, User currentUser) {
         String data = update.getCallbackQuery().getData();
 
@@ -433,10 +440,17 @@ public class BotService {
         requestRepository.save(request);
 
         SendPhoto sendPhoto = new SendPhoto();
-        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
-        bb.putLong(request.getUser().getQrcode().getMostSignificantBits());
-        bb.putLong(request.getUser().getQrcode().getLeastSignificantBits());
-        InputFile inputFile = new InputFile(new ByteArrayInputStream(bb.array()).toString());
+//        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+//        bb.putLong(request.getUser().getQrcode().getMostSignificantBits());
+//        bb.putLong(request.getUser().getQrcode().getLeastSignificantBits());
+//        InputFile inputFile = new InputFile(new ByteArrayInputStream(bb.array()).toString());
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(request.getUser().getQrcode().toString(), BarcodeFormat.QR_CODE, 500, 500);
+
+        ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
+        byte[] pngData = pngOutputStream.toByteArray();
+        InputFile inputFile = new InputFile(new ByteArrayInputStream(Arrays.toString(pngData).getBytes()), "qrcode");
         sendPhoto.setPhoto(inputFile);
         sendPhoto.setChatId(update.getCallbackQuery().getMessage().getChatId());
         if (currentUser.getLanguage().equals(Language.UZB)) {
