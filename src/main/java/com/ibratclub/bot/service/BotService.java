@@ -441,7 +441,7 @@ public class BotService {
         } else {
             request = requestList.get(0);
         }
-        Request savedRequest = requestRepository.save(request);
+        requestRepository.save(request);
         SendPhoto sendPhoto = new SendPhoto();
 //        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
 //        bb.putLong(request.getUser().getQrcode().getMostSignificantBits());
@@ -453,12 +453,7 @@ public class BotService {
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
         byte[] pngData = pngOutputStream.toByteArray();
-        Attachment attachment = new Attachment();
-        attachment.setBytes(pngData);
-        attachment.setOriginalName("QrCode");
-        attachment.setContentType("image/png");
-        Attachment save = attachmentRepository.save(attachment);
-        InputFile inputFile = new InputFile(new ByteArrayInputStream(save.getBytes()), save.getOriginalName());
+        InputFile inputFile = new InputFile(new ByteArrayInputStream(pngData), "QrCode.png");
         sendPhoto.setPhoto(inputFile);
         sendPhoto.setChatId(update.getCallbackQuery().getMessage().getChatId());
         if (currentUser.getLanguage().equals(Language.UZB)) {
@@ -483,7 +478,6 @@ public class BotService {
 //                    .build();
             sendPhoto.setCaption(ConstantRu.RESPONSE_FOR_REQUEST);
         }
-        attachmentRepository.delete(attachment);
         return sendPhoto;
     }
 

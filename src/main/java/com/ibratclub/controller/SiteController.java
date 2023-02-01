@@ -3,11 +3,11 @@ package com.ibratclub.controller;
 import com.ibratclub.dto.ApiResponse;
 import com.ibratclub.dto.RequestDTO;
 import com.ibratclub.dto.ReviewDTO;
-import com.ibratclub.model.Product;
-import com.ibratclub.model.Request;
-import com.ibratclub.model.Review;
-import com.ibratclub.model.SiteHistory;
-import com.ibratclub.model.User;
+import com.ibratclub.model.*;
+import com.ibratclub.repository.CountryRepository;
+import com.ibratclub.repository.DistrictRepository;
+import com.ibratclub.repository.RegionRepository;
+import com.ibratclub.service.AddressService;
 import com.ibratclub.service.ProductService;
 import com.ibratclub.service.SiteService;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +32,28 @@ import java.util.Map;
 @RequestMapping("/api/site")
 @RequiredArgsConstructor
 public class SiteController {
-
     private final SiteService siteService;
     private final ProductService productService;
-
+    private final AddressService addressService;
     @GetMapping("/request")
     public ResponseEntity<?> getRequest() {
         ApiResponse<List<Request>> response = siteService.getRequest();
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @GetMapping("/district")
+    public ResponseEntity<?> getAllDistrict(@RequestParam(required = false) Long regionId){
+        ApiResponse<List<District>> response = addressService.getAllDistricts(regionId);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+    @GetMapping("/region")
+    public ResponseEntity<?> getAllRegion(@RequestParam(required = false) Long countryId){
+        ApiResponse<List<Region>> response = addressService.getAllRegions(countryId);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+    @GetMapping("/country")
+    public ResponseEntity<?> getAllCountry(){
+        ApiResponse<List<Country>> response = addressService.getAllCountry();
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 

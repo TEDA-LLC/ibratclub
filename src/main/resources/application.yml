@@ -6,7 +6,7 @@ server:
     certificate-private-key: /etc/letsencrypt/live/api.teda.uz/privkey.pem
 spring:
   datasource:
-#    url: jdbc:postgresql://localhost:5432/ibrat_club
+    #    url: jdbc:postgresql://localhost:5432/ibrat_club
     url: jdbc:postgresql://185.185.80.245/tedauzbot
     username: admin
     password: Turgun1970$
@@ -25,8 +25,8 @@ spring:
       max-file-size: 5MB
 telegram:
   bot:
-    #   username: Uzb_Namaz_Times_bot
-    #   token: 5082104093:AAEtEN22_VScHuRU7mgdvI8H-1p6v8hn8KU
+    #    username: Uzb_Namaz_Times_bot
+    #    token: 5082104093:AAEtEN22_VScHuRU7mgdvI8H-1p6v8hn8KU
     username: ibratclub_bot
     token: 5927728152:AAExhfEpagD__0D9A6b_qJs56SuXV06oZ-8
     id: 3
