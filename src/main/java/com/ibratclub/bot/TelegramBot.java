@@ -261,6 +261,9 @@ public class TelegramBot extends TelegramLongPollingBot {
                                         execute(botService.getLocation(update, currentUser));
                                     }
                                 }
+                                currentUser.setState(State.CONTACT);
+                                userRepository.save(currentUser);
+                                execute(botService.menu(chatId, currentUser.getLanguage()));
                             }
                         }
                     }

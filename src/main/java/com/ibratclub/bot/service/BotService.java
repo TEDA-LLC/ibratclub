@@ -11,6 +11,7 @@ import com.ibratclub.model.*;
 import com.ibratclub.model.enums.Language;
 import com.ibratclub.model.enums.RegisteredType;
 import com.ibratclub.repository.*;
+import com.ibratclub.service.QRCodeService;
 import com.ibratclub.specification.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -31,7 +32,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +52,8 @@ public class BotService {
     private final RequestRepository requestRepository;
     private final VacancyRepository vacancyRepository;
     private final BotRepository botRepository;
+    private final QRCodeService qrCodeService;
+    private final AttachmentRepository attachmentRepository;
 
     public SendMessage start(String chatId) {
         return SendMessage.builder()
@@ -356,14 +358,16 @@ public class BotService {
         userHistory.setUser(currentUser);
         userHistory.setProduct(product);
         userHistoryRepository.save(userHistory);
-        builder.append(product.getFrom().toString());
-        builder.append(" - ");
-        builder.append(product.getTo().toString());
-        builder.append("\n");
-        builder.append("Address: ");
-        builder.append(product.getAddress().getDistrict().getName());
-        builder.append(" ");
-        builder.append(product.getAddress().getStreetHome());
+        if (product.getAddress() != null) {
+            builder.append(product.getFrom().toString());
+            builder.append(" - ");
+            builder.append(product.getTo().toString());
+            builder.append("\n");
+            builder.append("Address: ");
+            builder.append(product.getAddress().getDistrict().getName());
+            builder.append(" ");
+            builder.append(product.getAddress().getStreetHome());
+        }
         sendPhoto.setCaption(String.valueOf(builder));
 
         InputFile inputFile = new InputFile(new ByteArrayInputStream(product.getAttachment().getBytes()), product.getAttachment().getOriginalName());
@@ -437,8 +441,7 @@ public class BotService {
         } else {
             request = requestList.get(0);
         }
-        requestRepository.save(request);
-
+        Request savedRequest = requestRepository.save(request);
         SendPhoto sendPhoto = new SendPhoto();
 //        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
 //        bb.putLong(request.getUser().getQrcode().getMostSignificantBits());
@@ -450,7 +453,12 @@ public class BotService {
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
         byte[] pngData = pngOutputStream.toByteArray();
-        InputFile inputFile = new InputFile(new ByteArrayInputStream(Arrays.toString(pngData).getBytes()), "qrcode");
+        Attachment attachment = new Attachment();
+        attachment.setBytes(pngData);
+        attachment.setOriginalName("QrCode");
+        attachment.setContentType("image/png");
+        Attachment save = attachmentRepository.save(attachment);
+        InputFile inputFile = new InputFile(new ByteArrayInputStream(save.getBytes()), save.getOriginalName());
         sendPhoto.setPhoto(inputFile);
         sendPhoto.setChatId(update.getCallbackQuery().getMessage().getChatId());
         if (currentUser.getLanguage().equals(Language.UZB)) {
@@ -475,6 +483,7 @@ public class BotService {
 //                    .build();
             sendPhoto.setCaption(ConstantRu.RESPONSE_FOR_REQUEST);
         }
+        attachmentRepository.delete(attachment);
         return sendPhoto;
     }
 
