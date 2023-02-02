@@ -39,8 +39,8 @@ public class Product {
     private Double price;
 
     private Integer minimumTerm;
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private LocalDateTime from, to;
+//    @JsonFormat(pattern="yyyy-MM-dd")
+    private LocalDateTime fromDate, toDate;
     @ManyToOne(cascade = CascadeType.ALL)
     private Address address;
 
