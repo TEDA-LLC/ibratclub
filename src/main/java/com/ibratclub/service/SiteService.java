@@ -65,6 +65,8 @@ public class SiteService {
         request.setProduct(product);
         if (dto.getCategory() != null)
             request.setCategory(dto.getCategory());
+        else
+            request.setCategory(product.getNameEn());
         ApiResponse<User> response = login(dto.getEmail(), dto.getPhone());
         if (!response.isSuccess()){
             return response;
