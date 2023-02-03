@@ -359,10 +359,12 @@ public class BotService {
         userHistory.setProduct(product);
         userHistoryRepository.save(userHistory);
         if (product.getAddress() != null) {
-            builder.append(product.getFromDate().toLocalDate().toString());
-            builder.append(" - ");
-            builder.append(product.getToDate().toLocalDate().toString());
-            builder.append("\n");
+            if (product.getFromDate() != null && product.getToDate() != null) {
+                builder.append(product.getFromDate().toLocalDate().toString());
+                builder.append(" - ");
+                builder.append(product.getToDate().toLocalDate().toString());
+                builder.append("\n");
+            }
             builder.append("Address: ");
             builder.append(product.getAddress().getDistrict().getName());
             builder.append(" ");
