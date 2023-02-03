@@ -63,10 +63,12 @@ public class SiteService {
         }
         Product product = productOptional.get();
         request.setProduct(product);
-        if (dto.getCategory() != null)
+        if (dto.getCategory() != null) {
             request.setCategory(dto.getCategory());
-        else
+        }
+        else {
             request.setCategory(product.getNameEn());
+        }
         ApiResponse<User> response = login(dto.getEmail(), dto.getPhone());
         if (!response.isSuccess()){
             return response;
