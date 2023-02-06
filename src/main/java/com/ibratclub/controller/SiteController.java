@@ -3,16 +3,21 @@ package com.ibratclub.controller;
 import com.ibratclub.dto.ApiResponse;
 import com.ibratclub.dto.RequestDTO;
 import com.ibratclub.dto.ReviewDTO;
-import com.ibratclub.model.*;
-import com.ibratclub.repository.CountryRepository;
-import com.ibratclub.repository.DistrictRepository;
-import com.ibratclub.repository.RegionRepository;
+import com.ibratclub.model.Country;
+import com.ibratclub.model.District;
+import com.ibratclub.model.Product;
+import com.ibratclub.model.Region;
+import com.ibratclub.model.Request;
+import com.ibratclub.model.Review;
+import com.ibratclub.model.SiteHistory;
+import com.ibratclub.model.User;
 import com.ibratclub.service.AddressService;
 import com.ibratclub.service.ProductService;
 import com.ibratclub.service.SiteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,6 +76,11 @@ public class SiteController {
 
     @PostMapping
     public ResponseEntity<?> add(@RequestBody RequestDTO dto) {
+        ApiResponse<?> response = siteService.add(dto);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+    @PostMapping("/request")
+    public ResponseEntity<?> addRequest(@ModelAttribute RequestDTO dto) {
         ApiResponse<?> response = siteService.add(dto);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
