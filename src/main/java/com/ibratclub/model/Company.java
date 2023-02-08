@@ -46,6 +46,9 @@ public class Company {
     @OneToMany(mappedBy = "company")
     @ToString.Exclude
     private List<Bot> botList;
+    @OneToMany(mappedBy = "company")
+    @ToString.Exclude
+    private List<Site> siteList;
     @ManyToMany
     @ToString.Exclude
     private List<Employee> employees;

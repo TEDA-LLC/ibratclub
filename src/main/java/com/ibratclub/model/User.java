@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -88,19 +89,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RegisteredType registeredType;
 
-    //    @GeneratedValue(generator = "UUID")
-//    @GenericGenerator(
-//            name = "UUID",
-//            strategy = "org.hibernate.id.UUIDGenerator",
-//            parameters = {
-//                    @org.hibernate.annotations.Parameter(
-//                            name = "uuid_gen_strategy_class",
-//                            value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
-//                    )
-//            }
-//    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @JsonIgnore
     @Column(unique = true)
-    private UUID qrcode = UUID.randomUUID();
+    private UUID qrcode;
 
 }

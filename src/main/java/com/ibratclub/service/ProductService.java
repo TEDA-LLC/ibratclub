@@ -108,11 +108,26 @@ public class ProductService {
         product.setDescriptionRu(productDTO.getDescriptionRu());
         product.setDescriptionUz(productDTO.getDescriptionUz());
         product.setDescriptionEn(productDTO.getDescriptionEn());
-//        if (productDTO.getFrom() != null){
-//            if (LocalDateTime.now().isAfter(productDTO.getFrom())){
-//
-//            }
-//        }
+        if (productDTO.getFrom() != null){
+            if (LocalDateTime.now().isAfter(productDTO.getFrom())){
+                product.setFromDate(productDTO.getFrom());
+            }
+            return ApiResponse.builder().
+                    message("Wrong start data time!!!").
+                    status(400).
+                    success(false).
+                    build();
+        }
+        if (productDTO.getTo() != null){
+            if (LocalDateTime.now().isAfter(productDTO.getTo())){
+                product.setToDate(productDTO.getTo());
+            }
+            return ApiResponse.builder().
+                    message("Wrong finish data time!!!").
+                    status(400).
+                    success(false).
+                    build();
+        }
 
         productRepository.save(product);
 
