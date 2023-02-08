@@ -1,5 +1,6 @@
 package com.ibratclub.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +21,7 @@ public class ProductDTO {
     private Long categoryId;
     private AddressDTO address;
     private MultipartFile attachment;
+    @JsonFormat(pattern="yyyy-MM-ddTHH:mm")
     private LocalDateTime from, to;
     private Double price;
 
