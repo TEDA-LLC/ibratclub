@@ -418,6 +418,7 @@ public class BotService {
         WordHistory wordsHistory = WordHistory.builder().
                 user(user).
                 word(message.getText()).
+                department(departmentRepository.findById(departmentId).get()).
                 build();
         wordHistoryRepository.save(wordsHistory);
     }
