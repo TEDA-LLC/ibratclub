@@ -34,13 +34,13 @@ public class Bot {
 //    @OneToMany(mappedBy = "bot")
 //    @ToString.Exclude
 //    private List<User> userList;
-    @OneToMany(mappedBy = "department")
-    @ToString.Exclude
-    private List<Category> categories;
-
-    @OneToMany(mappedBy = "department")
-    @ToString.Exclude
-    private List<Vacancy> vacancies;
+//    @OneToMany(mappedBy = "department")
+//    @ToString.Exclude
+//    private List<Category> categories;
+//
+//    @OneToMany(mappedBy = "department")
+//    @ToString.Exclude
+//    private List<Vacancy> vacancies;
     @Column(nullable = false)
     private boolean active = true;
     @ManyToOne
