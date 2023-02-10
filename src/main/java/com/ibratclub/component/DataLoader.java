@@ -3,8 +3,11 @@ package com.ibratclub.component;
 import com.ibratclub.model.Bot;
 import com.ibratclub.model.Category;
 import com.ibratclub.model.Company;
+import com.ibratclub.model.Department;
 import com.ibratclub.repository.BotRepository;
 import com.ibratclub.repository.CategoryRepository;
+import com.ibratclub.repository.CompanyRepository;
+import com.ibratclub.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -24,6 +27,9 @@ public class DataLoader implements CommandLineRunner {
     private final BotRepository botRepository;
     @Value("${spring.sql.init.mode}")
     String mode;
+    private final DepartmentRepository departmentRepository;
+    private final CompanyRepository companyRepository;
+
     @Override
     public void run(String... args) {
         if (mode.equals("always")) {
@@ -50,12 +56,20 @@ public class DataLoader implements CommandLineRunner {
                     .nameRu("Выставки \uD83D\uDCBB")
                     .nameEn("Events \uD83D\uDCBB")
                     .build();
-            system.setBot(save);
-            service.setBot(save);
+//            system.setBot(save);
+//            service.setBot(save);
+            Department department = new Department();
+            department.setBot(save);
+            Department departmentSave = departmentRepository.save(department);
+            system.setDepartment(departmentSave);
+            service.setDepartment(departmentSave);
+
             categoryRepository.save(service);
             categoryRepository.save(system);
             Company company = new Company();
-            company.setBotList(List.of(save));
+            company.setDepartmentList(List.of(departmentSave));
+            companyRepository.save(company);
+//            company.setBotList(List.of(save));
 
         }
     }

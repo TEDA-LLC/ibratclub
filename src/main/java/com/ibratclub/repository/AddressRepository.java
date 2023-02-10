@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  * @author Malikov Azizjon  *  15.01.2023  *  21:47   *  IbratClub
  */
 @Repository
-public interface AddressReposiitory extends JpaRepository<Address,Long> {
+public interface AddressRepository extends JpaRepository<Address,Long> {
 }

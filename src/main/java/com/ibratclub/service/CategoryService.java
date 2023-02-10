@@ -15,12 +15,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
-    @Value("${telegram.bot.id}")
-    private Long botId;
+    @Value("${company.department.id}")
+    private Long departmentId;
     private final CategoryRepository categoryRepository;
 
     public ApiResponse<List<Category>> getAll() {
-        List<Category> categories = categoryRepository.findAllByBot_Id(botId);
+        List<Category> categories = categoryRepository.findAllByDepartment_Id(departmentId);
         return ApiResponse.<List<Category>>builder().
                 message("Here").
                 status(200).

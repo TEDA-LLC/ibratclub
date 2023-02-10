@@ -11,5 +11,5 @@ import java.util.List;
  */
 @Repository
 public interface SiteHistoryRepository extends JpaRepository<SiteHistory, Long> {
-    List<SiteHistory> findAllByUser_Company_Id(Long companyId);
+    List<SiteHistory> findAllByUser_Department_Id(Long departmentId);
 }

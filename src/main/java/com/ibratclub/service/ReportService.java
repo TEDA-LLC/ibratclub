@@ -17,10 +17,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ReportService {
-    @Value("${telegram.bot.id}")
-    private Long botId;
-    @Value("${company.id}")
-    private Long companyId;
+//    @Value("${telegram.bot.id}")
+//    private Long botId;
+    @Value("${company.department.id}")
+    private Long departmentId;
     private final UserRepository userRepository;
     private final UserHistoryRepository userHistoryRepository;
     private final ProductRepository productRepository;
@@ -28,7 +28,7 @@ public class ReportService {
     private final RequestRepository requestRepository;
 
     public ApiResponse<List<User>> getAll() {
-        List<User> users = userRepository.findAllByBot_Id(botId);
+        List<User> users = userRepository.findAllByDepartment_Id(departmentId);
         return ApiResponse.<List<User>>builder().
                 message("Here").
                 status(200).
@@ -38,7 +38,7 @@ public class ReportService {
     }
 
     public ApiResponse<List<UserHistory>> getUserHistory() {
-        List<UserHistory> histories = userHistoryRepository.findAllByUser_Bot_Id(botId);
+        List<UserHistory> histories = userHistoryRepository.findAllByUser_Department_Id(departmentId);
         return ApiResponse.<List<UserHistory>>builder().
                 message("Here").
                 status(200).
@@ -49,7 +49,7 @@ public class ReportService {
 
     public ApiResponse<?> getAmountByProduct(Long productId) {
         Optional<Product> productOptional = productRepository.findById(productId);
-        if (productOptional.isEmpty() || !productOptional.get().getCategory().getBot().getId().equals(botId)) {
+        if (productOptional.isEmpty() || !productOptional.get().getCategory().getDepartment().getId().equals(departmentId)) {
             return ApiResponse.builder().
                     message("Product Not Found").
                     status(400).
@@ -66,7 +66,7 @@ public class ReportService {
         }
     }
     public ApiResponse<List<WordHistory>> getWordsHistory() {
-        List<WordHistory> history = wordHistoryRepository.findAllByUser_Bot_Id(botId);
+        List<WordHistory> history = wordHistoryRepository.findAllByUser_Department_Id(departmentId);
         return ApiResponse.<List<WordHistory>>builder().
                 message("Here").
                 status(200).
@@ -77,7 +77,7 @@ public class ReportService {
 
     public ApiResponse<?> editView(Long requestId) {
         Optional<Request> requestOptional = requestRepository.findById(requestId);
-        if (requestOptional.isEmpty()|| !requestOptional.get().getUser().getBot().getId().equals(botId)) {
+        if (requestOptional.isEmpty()|| !requestOptional.get().getUser().getDepartment().getId().equals(departmentId)) {
             return ApiResponse.builder().
                     message("Request id not found !").
                     status(400).

@@ -16,16 +16,16 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Long> {
 
     Optional<User> findByUsername(String username);
-    Optional<User> findByPhoneAndBot_Id(String phone, Long botId);
-    Optional<User> findByPhoneAndCompany_Id(String phone, Long companyId);
-    Optional<User> findByEmailAndCompany_Id(String email, Long companyId);
+//    Optional<User> findByPhoneAndDepartment_Id(String phone, Long departmentId);
+    Optional<User> findByPhoneAndDepartment_Id(String phone, Long departmentId);
+    Optional<User> findByEmailAndDepartment_Id(String email, Long departmentId);
 
     Page<User> findAllByActiveTrue(Pageable pageable);
-    List<User> findAllByBot_Id(Long botId);
+    List<User> findAllByDepartment_Id(Long departmentId);
 
 //    @Query(nativeQuery = true, value = "select * from users inner join users_roles on users.id = users_roles.users_id where users_roles.roles = :role")
 //    User getByRole(String role);
-    Optional<User> findByBot_IdAndChatId(Long bot_id, String chatId);
-    Optional<User> findByBot_IdAndChatIdAndPhone(Long bot_id, String chatId, String phone);
+    Optional<User> findByDepartment_IdAndChatId(Long departmentId, String chatId);
+    Optional<User> findByDepartment_IdAndChatIdAndPhone(Long departmentId, String chatId, String phone);
     Optional<User> findByChatId( String chatId);
 }

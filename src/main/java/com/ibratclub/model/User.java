@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -67,13 +66,14 @@ public class User {
     @OneToOne(mappedBy = "user")
     @JsonIgnore
     private Avatar avatar;
-    @ManyToOne
-    @JsonIgnore
-    private Company company;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
-    private Bot bot;
+    private Department department;
+//    @JsonIgnore
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @ToString.Exclude
+//    private Bot bot;
     private int count = 0;
     @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate brithDate;

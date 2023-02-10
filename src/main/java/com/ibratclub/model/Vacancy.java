@@ -21,10 +21,10 @@ public class Vacancy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name, description;
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @ToString.Exclude
-    private Bot bot;
+    private Department department;
     private boolean active;
 
 }

@@ -4,17 +4,11 @@ import com.ibratclub.bot.constant.ConstantEn;
 import com.ibratclub.bot.constant.ConstantRu;
 import com.ibratclub.bot.constant.ConstantUz;
 import com.ibratclub.bot.service.BotService;
-import com.ibratclub.model.Address;
-import com.ibratclub.model.Bot;
-import com.ibratclub.model.Product;
-import com.ibratclub.model.User;
+import com.ibratclub.model.*;
 import com.ibratclub.model.enums.Language;
 import com.ibratclub.model.enums.RegisteredType;
 import com.ibratclub.model.enums.State;
-import com.ibratclub.repository.BotRepository;
-import com.ibratclub.repository.CompanyRepository;
-import com.ibratclub.repository.ProductRepository;
-import com.ibratclub.repository.UserRepository;
+import com.ibratclub.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,15 +33,16 @@ public class TelegramBot extends TelegramLongPollingBot {
     private String userName;
     @Value("${telegram.bot.token}")
     private String botToken;
-    @Value("${telegram.bot.id}")
-    private Long botId;
-    @Value("${company.id}")
-    private Long companyId;
+//    @Value("${telegram.bot.id}")
+//    private Long botId;
+    @Value("${company.department.id}")
+    private Long departmentId;
     private final CompanyRepository companyRepository;
     private final BotService botService;
     private final UserRepository userRepository;
     private final BotRepository botRepository;
     private final ProductRepository productRepository;
+    private final DepartmentRepository departmentRepository;
 
     @Override
     public String getBotUsername() {
@@ -68,11 +63,11 @@ public class TelegramBot extends TelegramLongPollingBot {
             public void run() {
                 User currentUser;
                 if (update.hasMessage()) {
-                    Optional<Bot> botOptional = botRepository.findById(botId);
-                    Bot bot = botOptional.get();
+                    Optional<Department> departmentOptional = departmentRepository.findById(departmentId);
+                    Bot bot = departmentOptional.get().getBot();
                     Message message = update.getMessage();
                     String chatId = String.valueOf(message.getChatId());
-                    Optional<User> optionalUser = userRepository.findByBot_IdAndChatId(botId, chatId);
+                    Optional<User> optionalUser = userRepository.findByDepartment_IdAndChatId(departmentId, chatId);
                     if (message.hasText()) {
                         if (message.getText().equals("/start")) {
                             if (optionalUser.isPresent()) {
@@ -81,13 +76,14 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 currentUser.setFullName(update.getMessage().getFrom().getFirstName());
                             } else {
                                 currentUser = new User();
-                                currentUser.setCompany(companyRepository.findById(companyId).get());
+//                                currentUser.setCompany(companyRepository.findById(companyId).get());
+                                currentUser.setDepartment(departmentOptional.get());
                                 currentUser.setChatId(String.valueOf(update.getMessage().getChatId()));
                                 currentUser.setRegisteredType(RegisteredType.BOT);
                                 currentUser.setFullName(message.getFrom().getFirstName());
                                 currentUser.setUsername(message.getFrom().getUserName());
                                 currentUser.setState(State.START);
-                                currentUser.setBot(bot);
+//                                currentUser.setBot(bot);
                             }
                             currentUser.setLastOperationTime(LocalDateTime.now());
                             userRepository.save(currentUser);
@@ -194,7 +190,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 if (!phoneNumber.startsWith("+")) {
                                     phoneNumber = "+" + phoneNumber;
                                 }
-                                Optional<User> byPhone = userRepository.findByPhoneAndBot_Id(phoneNumber, botId);
+                                Optional<User> byPhone = userRepository.findByPhoneAndDepartment_Id(phoneNumber, departmentId);
                                 user.setPhone(message.getContact().getPhoneNumber());
                                 user.setState(State.CONTACT);
                                 user.setLastOperationTime(LocalDateTime.now());
@@ -204,11 +200,12 @@ public class TelegramBot extends TelegramLongPollingBot {
                                     user1.setPhone(phoneNumber);
                                     user1.setCount(user1.getCount() + user.getCount());
                                     user1.setLastOperationTime(LocalDateTime.now());
-                                    user1.setBot(user.getBot());
+//                                    user1.setBot(user.getBot());
                                     user1.setLanguage(user.getLanguage());
                                     user1.setChatId(user.getChatId());
                                     user1.setUsername(user.getUsername());
-                                    user1.setCompany(user.getCompany());
+//                                    user1.setCompany(user.getCompany());
+                                    user1.setDepartment(user.getDepartment());
                                     userRepository.save(user1);
                                     userRepository.delete(user);
                                 } else {
@@ -228,7 +225,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 } else if (update.hasCallbackQuery()) {
                     CallbackQuery callbackQuery = update.getCallbackQuery();
                     String chatId = String.valueOf(callbackQuery.getMessage().getChatId());
-                    Optional<User> optionalUser = userRepository.findByBot_IdAndChatId(botId, chatId);
+                    Optional<User> optionalUser = userRepository.findByDepartment_IdAndChatId(departmentId, chatId);
                     currentUser = optionalUser.get();
                     switch (currentUser.getState()) {
                         case CONTACT -> {

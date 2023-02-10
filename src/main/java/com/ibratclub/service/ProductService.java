@@ -3,7 +3,11 @@ package com.ibratclub.service;
 import com.ibratclub.dto.AddressDTO;
 import com.ibratclub.dto.ApiResponse;
 import com.ibratclub.dto.ProductDTO;
-import com.ibratclub.model.*;
+import com.ibratclub.model.Address;
+import com.ibratclub.model.Attachment;
+import com.ibratclub.model.Category;
+import com.ibratclub.model.District;
+import com.ibratclub.model.Product;
 import com.ibratclub.repository.AttachmentRepository;
 import com.ibratclub.repository.CategoryRepository;
 import com.ibratclub.repository.DistrictRepository;
@@ -27,15 +31,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductService {
 
-    @Value("${telegram.bot.id}")
-    private Long botId;
+    @Value("${company.department.id}")
+    private Long departmentId;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final AttachmentRepository attachmentRepository;
     private final DistrictRepository districtRepository;
 
     public ApiResponse<List<Product>> getAll() {
-        List<Product> products = productRepository.findAllByActiveTrueAndCategory_Bot_Id(botId);
+        List<Product> products = productRepository.findAllByActiveTrueAndCategory_Department_Id(departmentId);
         return ApiResponse.<List<Product>>builder().
                 message("Here").
                 status(200).
@@ -47,7 +51,7 @@ public class ProductService {
 
     public ApiResponse<Product> getOne(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isEmpty() || !optionalProduct.get().getCategory().getBot().getId().equals(botId)) {
+        if (optionalProduct.isEmpty() || !optionalProduct.get().getCategory().getDepartment().getId().equals(departmentId)) {
             return ApiResponse.<Product>builder().
                     message("Not Found").
                     status(204).
@@ -66,7 +70,7 @@ public class ProductService {
     @SneakyThrows
     public ApiResponse<?> save(ProductDTO productDTO) {
         Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
-        if (categoryOptional.isEmpty() || !categoryOptional.get().getBot().getId().equals(botId)) {
+        if (categoryOptional.isEmpty() || !categoryOptional.get().getDepartment().getId().equals(departmentId)) {
             return ApiResponse.builder().
                     message("Category not found").
                     status(400).
@@ -149,7 +153,7 @@ public class ProductService {
                     success(false).
                     build();
         }
-        if (optionalCategory.isEmpty() || !optionalCategory.get().getBot().getId().equals(botId)) {
+        if (optionalCategory.isEmpty() || !optionalCategory.get().getDepartment().getId().equals(departmentId)) {
             return ApiResponse.builder().
                     message("Category Not Found").
                     status(204).
@@ -209,7 +213,7 @@ public class ProductService {
 
     public ApiResponse<?> delete(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isEmpty() || !optionalProduct.get().getCategory().getBot().getId().equals(botId)) {
+        if (optionalProduct.isEmpty() || !optionalProduct.get().getCategory().getDepartment().getId().equals(departmentId)) {
             return ApiResponse.builder().
                     message("Product Not Found").
                     status(204).

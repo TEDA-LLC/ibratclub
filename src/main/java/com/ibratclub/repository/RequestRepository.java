@@ -17,9 +17,9 @@ import java.util.List;
 @Repository
 public interface RequestRepository extends JpaRepository<Request,Long> {
 
-    List<Request> findAllByUserAndProduct_Category_Bot_Id(User user, Long botId, Sort sort);
+    List<Request> findAllByUserAndProduct_Category_Department_Id(User user, Long botId, Sort sort);
     List<Request> findAllByUser(User user);
-    List<Request> findAllByProduct_Category_Bot_Id(Long botId);
+    List<Request> findAllByProduct_Category_Department_Id(Long botId);
     List<Request> findAllByProductAndUser_Email(Product product, String email);
     List<Request> findAllByProductAndUser_Phone(Product product, String phone);
     List<Request> findAllByProductAndUser(Product product, User user);

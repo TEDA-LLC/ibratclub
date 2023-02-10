@@ -1,11 +1,10 @@
 package com.ibratclub.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import javax.persistence.*;
-
 import com.ibratclub.model.enums.ActiveTypes;
 import lombok.*;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,16 +38,18 @@ public class Company {
     private Employee director;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime registeredTime = LocalDateTime.now();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private List<User> clientList;
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @ToString.Exclude
+//    private List<User> clientList;
+//    @OneToMany(mappedBy = "company")
+//    @ToString.Exclude
+//    private List<Bot> botList;
+//    @OneToMany(mappedBy = "company")
+//    @ToString.Exclude
+//    private List<Site> siteList;
     @OneToMany(mappedBy = "company")
     @ToString.Exclude
-    private List<Bot> botList;
-    @OneToMany(mappedBy = "company")
-    @ToString.Exclude
-    private List<Site> siteList;
+    private List<Department> departmentList;
     @ManyToMany
     @ToString.Exclude
     private List<Employee> employees;

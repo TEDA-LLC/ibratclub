@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSpecificationExecutor<Category> {
-    List<Category> findAllByBot_Id(Long id);
+    List<Category> findAllByDepartment_Id(Long id);
 
 //    Optional<Category> findByNameUzOrNameRuOrNameEn(String nameUz, String nameRu, String nameEn);
 
