@@ -2,10 +2,7 @@ package com.ibratclub.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ibratclub.model.enums.Gender;
-import com.ibratclub.model.enums.Language;
-import com.ibratclub.model.enums.RegisteredType;
-import com.ibratclub.model.enums.State;
+import com.ibratclub.model.enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -93,5 +90,9 @@ public class User {
     @JsonIgnore
     @Column(unique = true)
     private UUID qrcode;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+    private boolean resident = true;
+    private String know, company, workType;
 
 }

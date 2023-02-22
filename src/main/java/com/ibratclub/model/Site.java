@@ -1,8 +1,20 @@
 package com.ibratclub.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import javax.persistence.*;
-import lombok.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -24,8 +36,9 @@ public class Site {
 
     private LocalDateTime dateTime = LocalDateTime.now();
 
-    @ManyToOne
     @JsonIgnore
-    private Company company;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Department department;
 
 }

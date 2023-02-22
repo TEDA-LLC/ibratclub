@@ -6,10 +6,10 @@ server:
     certificate-private-key: /etc/letsencrypt/live/api.teda.uz/privkey.pem
 spring:
   datasource:
-    #    url: jdbc:postgresql://localhost:5432/ibrat_club
-    url: jdbc:postgresql://185.185.80.245/eventSystems
-    username: admin
-    password: Turgun1970$
+    url: jdbc:postgresql://localhost:5432/postgres
+    #    url: jdbc:postgresql://185.185.80.245/eventSystems
+    username: postgres
+    password: 977515747
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: true
@@ -34,4 +34,4 @@ page:
   size: 20
 company:
   department:
-    id : 2
+    id: 2

@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Malikov Azizjon  *  16.01.2023  *  17:42   *  IbratClub
@@ -48,5 +49,9 @@ public class Product {
     @Builder.Default
     @Column(nullable = true)
     private boolean active = true;
+
+    @OneToMany
+    @ToString.Exclude
+    private List<User> speakers;
 
 }

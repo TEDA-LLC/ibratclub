@@ -288,7 +288,7 @@ public class BotService {
                                 fieldType(FieldType.LONG).
                                 operator(Operator.EQUAL).
                                 value(departmentId).
-                                key("bot.id")
+                                key("department.id")
                                 .build())
                         ).build()).and(new EntitySpecification<>(searchRequest)), PageRequest.of(0, 1));
         if (category.isEmpty()) return null;

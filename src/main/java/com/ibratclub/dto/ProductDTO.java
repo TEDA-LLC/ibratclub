@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Malikov Azizjon  *  16.01.2023  *  17:41   *  IbratClub
@@ -24,5 +25,6 @@ public class ProductDTO {
     @JsonFormat(pattern="yyyy-MM-ddTHH:mm")
     private LocalDateTime from, to;
     private Double price;
+    private List<Long> speakersId;
 
 }

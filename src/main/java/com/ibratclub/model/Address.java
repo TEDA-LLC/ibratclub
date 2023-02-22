@@ -22,7 +22,10 @@ public class Address {
 
     @ManyToOne
     private District district;
-
+    @ManyToOne
+    private Country country;
+    @ManyToOne
+    private Region region;
     private String streetHome;
 
     private Double latitude, longitude;
