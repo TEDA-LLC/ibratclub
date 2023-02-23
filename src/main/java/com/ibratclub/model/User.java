@@ -2,7 +2,11 @@ package com.ibratclub.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ibratclub.model.enums.*;
+import com.ibratclub.model.enums.Gender;
+import com.ibratclub.model.enums.Language;
+import com.ibratclub.model.enums.RegisteredType;
+import com.ibratclub.model.enums.State;
+import com.ibratclub.model.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
