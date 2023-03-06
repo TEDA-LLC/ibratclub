@@ -98,5 +98,8 @@ public class User {
     private UserRole role;
     private boolean resident = true;
     private String know, company, workType;
-
+    @ManyToOne
+    private Employee employee;
+    private LocalDateTime botRegisteredTime;
+    private LocalDateTime siteRegisteredTime;
 }

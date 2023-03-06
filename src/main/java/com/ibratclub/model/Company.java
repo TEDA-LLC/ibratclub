@@ -16,8 +16,8 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@Entity
 @ToString
+@Entity
 public class Company {
 
     @Id
@@ -38,7 +38,7 @@ public class Company {
     private Employee director;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime registeredTime = LocalDateTime.now();
-//    @ManyToMany(fetch = FetchType.LAZY)
+    //    @ManyToMany(fetch = FetchType.LAZY)
 //    @ToString.Exclude
 //    private List<User> clientList;
 //    @OneToMany(mappedBy = "company")
@@ -58,6 +58,16 @@ public class Company {
 
     @OneToOne(cascade = CascadeType.ALL)
     private Attachment attachment;
+
+    private Double abortion;
+    private String INN;
+    @ManyToMany
+    @ToString.Exclude
+    private List<WorkCategory> workCategoryList;
+
+    @ManyToMany
+    @ToString.Exclude
+    private List<WorkType> workTypeList;
 
     public Company(Employee director) {
         this.director = director;
