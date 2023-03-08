@@ -43,6 +43,6 @@ public class Bot {
 //    private List<Vacancy> vacancies;
     @Column(nullable = false)
     private boolean active = true;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Attachment logo;
 }

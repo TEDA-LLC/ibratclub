@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import javax.servlet.http.HttpServletResponse;
@@ -45,6 +46,25 @@ public class SiteService {
     private final BotRepository botRepository;
     private final CompanyRepository companyRepository;
     private final DepartmentRepository departmentRepository;
+    private final AttachmentRepository attachmentRepository;
+
+    @SneakyThrows
+    public ApiResponse<?> editPhoto(MultipartFile photo) {
+        Department department = departmentRepository.findById(departmentId).get();
+        Bot bot = department.getBot();
+        Attachment attachment = new Attachment();
+        attachment.setBytes(photo.getBytes());
+        attachment.setOriginalName(photo.getOriginalFilename());
+        attachment.setContentType(photo.getContentType());
+        attachment.setSize(photo.getSize());
+        bot.setLogo(attachmentRepository.save(attachment));
+        botRepository.save(bot);
+        return ApiResponse.builder().
+                message("Success!!!").
+                status(200).
+                success(true).
+                build();
+    }
 
     public ApiResponse<?> add(RequestDTO dto) {
         boolean isEmail = dto.getEmail() == null || !dto.getEmail().equals("");
