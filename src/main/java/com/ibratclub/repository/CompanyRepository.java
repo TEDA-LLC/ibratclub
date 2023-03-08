@@ -18,6 +18,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     Page<Company> findAllByActive(boolean active, Pageable pageable);
     Optional<Company> findByINN(String inn);
+    Optional<Company> findByName(String name);
     List<Company> findAllByDirector(Employee employee);
 
 }
