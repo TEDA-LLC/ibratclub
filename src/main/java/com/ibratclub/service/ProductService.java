@@ -114,25 +114,28 @@ public class ProductService {
         product.setDescriptionEn(productDTO.getDescriptionEn());
         LocalDateTime from = LocalDateTime.parse(productDTO.getFrom());
         LocalDateTime to = LocalDateTime.parse(productDTO.getTo());
-        if (productDTO.getFrom() != null){
-            if (LocalDateTime.now().isAfter(from)){
+        if (productDTO.getFrom() != null) {
+            if (LocalDateTime.now().isBefore(from)) {
                 product.setFromDate(from);
+            } else {
+                return ApiResponse.builder().
+                        message("Wrong start data time!!!").
+                        status(400).
+                        success(false).
+                        build();
             }
-            return ApiResponse.builder().
-                    message("Wrong start data time!!!").
-                    status(400).
-                    success(false).
-                    build();
         }
-        if (productDTO.getTo() != null){
-            if (LocalDateTime.now().isAfter(to)){
+        if (productDTO.getTo() != null) {
+            if (LocalDateTime.now().isBefore(to) && from.isBefore(to)) {
                 product.setToDate(to);
             }
-            return ApiResponse.builder().
-                    message("Wrong finish data time!!!").
-                    status(400).
-                    success(false).
-                    build();
+            else {
+                return ApiResponse.builder().
+                        message("Wrong finish data time!!!").
+                        status(400).
+                        success(false).
+                        build();
+            }
         }
 
         productRepository.save(product);
@@ -202,7 +205,31 @@ public class ProductService {
         product.setDescriptionEn(productDTO.getDescriptionEn());
         product.setPrice(productDTO.getPrice());
         product.setCategory(optionalCategory.get());
-
+        LocalDateTime from = LocalDateTime.parse(productDTO.getFrom());
+        LocalDateTime to = LocalDateTime.parse(productDTO.getTo());
+        if (productDTO.getFrom() != null) {
+            if (LocalDateTime.now().isBefore(from)) {
+                product.setFromDate(from);
+            } else {
+                return ApiResponse.builder().
+                        message("Wrong start data time!!!").
+                        status(400).
+                        success(false).
+                        build();
+            }
+        }
+        if (productDTO.getTo() != null) {
+            if (LocalDateTime.now().isBefore(to) && from.isBefore(to)) {
+                product.setToDate(to);
+            }
+            else {
+                return ApiResponse.builder().
+                        message("Wrong finish data time!!!").
+                        status(400).
+                        success(false).
+                        build();
+            }
+        }
 
         productRepository.save(product);
 
