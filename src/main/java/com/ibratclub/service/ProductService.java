@@ -112,9 +112,11 @@ public class ProductService {
         product.setDescriptionRu(productDTO.getDescriptionRu());
         product.setDescriptionUz(productDTO.getDescriptionUz());
         product.setDescriptionEn(productDTO.getDescriptionEn());
+        LocalDateTime from = LocalDateTime.parse(productDTO.getFrom());
+        LocalDateTime to = LocalDateTime.parse(productDTO.getTo());
         if (productDTO.getFrom() != null){
-            if (LocalDateTime.now().isAfter(productDTO.getFrom())){
-                product.setFromDate(productDTO.getFrom());
+            if (LocalDateTime.now().isAfter(from)){
+                product.setFromDate(from);
             }
             return ApiResponse.builder().
                     message("Wrong start data time!!!").
@@ -123,8 +125,8 @@ public class ProductService {
                     build();
         }
         if (productDTO.getTo() != null){
-            if (LocalDateTime.now().isAfter(productDTO.getTo())){
-                product.setToDate(productDTO.getTo());
+            if (LocalDateTime.now().isAfter(to)){
+                product.setToDate(to);
             }
             return ApiResponse.builder().
                     message("Wrong finish data time!!!").

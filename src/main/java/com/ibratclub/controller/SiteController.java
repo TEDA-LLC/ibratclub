@@ -158,9 +158,9 @@ public class SiteController {
     public ResponseEntity<?> getPhoto(@PathVariable Long id){
         return productService.getPhoto(id);
     }
-//    @PatchMapping("/editphoto")
-//    public ResponseEntity<?> editPhoto(@ModelAttribute MultipartFile photo){
-//        ApiResponse<?> response = siteService.editPhoto(photo);
-//        return ResponseEntity.status(response.getStatus()).body(response);
-//    }
+    @PatchMapping("/editphoto")
+    public ResponseEntity<?> editPhoto(@ModelAttribute MultipartFile photo){
+        ApiResponse<?> response = siteService.editPhoto(photo);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 }

@@ -22,8 +22,8 @@ public class ProductDTO {
     private Long categoryId;
     private AddressDTO address;
     private MultipartFile attachment;
-    @JsonFormat(pattern="yyyy-MM-ddTHH:mm")
-    private LocalDateTime from, to;
+//    @JsonFormat(pattern="yyyy-MM-ddTHH:mm")
+    private String from, to;
     private Double price;
     private List<Long> speakersId;
 
