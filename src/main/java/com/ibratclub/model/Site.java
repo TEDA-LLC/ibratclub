@@ -40,5 +40,6 @@ public class Site {
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private Department department;
-
+    @Column(nullable = true)
+    private boolean active = true;
 }
