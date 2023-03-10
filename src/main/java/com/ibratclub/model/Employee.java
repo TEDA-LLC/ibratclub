@@ -52,6 +52,8 @@ public class Employee {
 
     @Enumerated(EnumType.STRING)
     private RoleType selectedRole;
+    @ManyToOne
+    private Product product;
 
     //    @Override
 //    public Collection<? extends GrantedAuthority> getAuthorities() {

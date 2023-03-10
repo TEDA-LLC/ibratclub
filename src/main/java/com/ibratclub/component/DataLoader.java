@@ -69,15 +69,6 @@ public class DataLoader implements CommandLineRunner {
             companyRepository.save(company);
 //            company.setBotList(List.of(save));
         }
-        if (mode.equals("never")) {
-            List<User> userList = userRepository.findAll();
-            for (User user : userList) {
-                if (user.getQrcode() == null) {
-                    user.setQrcode(UUID.randomUUID());
-                    userRepository.save(user);
-                }
-            }
-        }
     }
 
 }
