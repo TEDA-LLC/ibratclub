@@ -1,19 +1,14 @@
 package com.ibratclub.component;
 
-import com.ibratclub.model.Bot;
-import com.ibratclub.model.Category;
-import com.ibratclub.model.Company;
-import com.ibratclub.model.Department;
-import com.ibratclub.repository.BotRepository;
-import com.ibratclub.repository.CategoryRepository;
-import com.ibratclub.repository.CompanyRepository;
-import com.ibratclub.repository.DepartmentRepository;
+import com.ibratclub.model.*;
+import com.ibratclub.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Malikov Azizjon  *  17.01.2023  *  22:16   *  IbratClub
@@ -29,6 +24,7 @@ public class DataLoader implements CommandLineRunner {
     String mode;
     private final DepartmentRepository departmentRepository;
     private final CompanyRepository companyRepository;
+    private final UserRepository userRepository;
 
     @Override
     public void run(String... args) {
@@ -72,7 +68,15 @@ public class DataLoader implements CommandLineRunner {
             company.setName("Ibrat Club");
             companyRepository.save(company);
 //            company.setBotList(List.of(save));
-
+        }
+        if (mode.equals("never")) {
+            List<User> userList = userRepository.findAll();
+            for (User user : userList) {
+                if (user.getQrcode() == null) {
+                    user.setQrcode(UUID.randomUUID());
+                    userRepository.save(user);
+                }
+            }
         }
     }
 

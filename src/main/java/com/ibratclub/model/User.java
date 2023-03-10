@@ -93,7 +93,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @JsonIgnore
     @Column(unique = true)
-    private UUID qrcode;
+    private UUID qrcode = UUID.randomUUID();
     @Enumerated(EnumType.STRING)
     private UserRole role;
     private boolean resident = true;
