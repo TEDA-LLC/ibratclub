@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author Malikov Azizjon  *  15.01.2023  *  18:17   *  IbratClub
@@ -16,12 +17,14 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Long> {
 
     Optional<User> findByUsername(String username);
+    Optional<User> findByDepartment_IdAndQrcode(Long departmentId, UUID qrcode);
 //    Optional<User> findByPhoneAndDepartment_Id(String phone, Long departmentId);
     Optional<User> findByPhoneAndDepartment_Id(String phone, Long departmentId);
     Optional<User> findByEmailAndDepartment_Id(String email, Long departmentId);
 
     Page<User> findAllByActiveTrue(Pageable pageable);
     List<User> findAllByDepartment_Id(Long departmentId);
+    Page<User> findAllByDepartment_Id(Long departmentId, Pageable pageable);
 
 //    @Query(nativeQuery = true, value = "select * from users inner join users_roles on users.id = users_roles.users_id where users_roles.roles = :role")
 //    User getByRole(String role);

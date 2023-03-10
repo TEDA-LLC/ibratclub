@@ -24,4 +24,5 @@ public interface RequestRepository extends JpaRepository<Request,Long> {
     List<Request> findAllByProductAndUser_Phone(Product product, String phone);
     List<Request> findAllByProductAndUser(Product product, User user);
     Page<Request> findAllByView(boolean view, Pageable pageable);
+    List<Request> findAllByProduct_Id(Long productId);
 }
