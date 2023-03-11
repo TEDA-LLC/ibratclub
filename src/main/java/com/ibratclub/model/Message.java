@@ -26,9 +26,9 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 100)
+    @Column(length = 500)
     private String rezult;
-    @Column(columnDefinition = "text")
+    @Column(length = 500)
     private String zapros;
     @Column(length = 150)
     private String platforma;
