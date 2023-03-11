@@ -8,7 +8,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author Malikov Azizjon  *  17.01.2023  *  22:16   *  IbratClub
@@ -69,6 +68,30 @@ public class DataLoader implements CommandLineRunner {
             companyRepository.save(company);
 //            company.setBotList(List.of(save));
         }
+//        if (mode.equals("never")) {
+//            String text = "18 mart Mexrinso Nurillayevna - “Biznes Strategiyasi“  treningi bo`lib o`tadi. \n" +
+//                    "Biznesda strategik boshqaruv yechimlari siz uchun. https://t.me/ibratclub_bot",
+//                    number1 = "", number2 = "", number3 = "", number4 = "";
+//            int count = 0;
+//            List<User> userList = userRepository.findAll();
+//            for (User user : userList) {
+//                if (user.getPhone() != null || user.getPhone().equals("")) {
+//                    continue;
+//                }
+//                Message message = new Message();
+//                message.setFlag(1);
+//                message.setTel(user.getPhone());
+//                if (count < 620) {
+//                    message.setEmployeePhone(number1);
+//                } else if (count < 1240) {
+//                    message.setEmployeePhone(number2);
+//                } else if (count < 1860) {
+//                    message.setEmployeePhone(number3);
+//                } else message.setEmployeePhone(number4);
+//                message.setZapros(text);
+//                count++;
+//            }
+//        }
     }
 
 }

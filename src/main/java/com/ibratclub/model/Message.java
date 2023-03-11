@@ -1,9 +1,17 @@
 package com.ibratclub.model;
 
-import com.ibratclub.model.enums.MessageType;
-import lombok.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -11,23 +19,33 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-@Entity
-@Builder
+@Entity(name = "prot_sms")
 public class Message {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String text;
-    @ManyToOne
-    private Bot bot;
-    @ManyToOne
-    private User user;
-    @ManyToOne
-    private Request request;
-    @Enumerated(EnumType.STRING)
-    private MessageType messageType;
-    @Builder.Default
-    private LocalDateTime sendTime = LocalDateTime.now();
-    private LocalDateTime acceptTime;
-    private boolean accept;
+    private Integer id;
+
+    @Column(length = 100)
+    private String rezult;
+    @Column(columnDefinition = "text")
+    private String zapros;
+    @Column(length = 150)
+    private String platforma;
+
+    @Column(length = 50)
+    private String tel, employeePhone;
+
+    @Column(nullable = false)
+    private int flag = 0;
+
+    private LocalDateTime sana;
+
+    public Message(String zapros, String rezult, String platforma, String tel, int flag) {
+        this.zapros = zapros;
+        this.rezult = rezult;
+        this.platforma = platforma;
+        this.tel = tel;
+        this.flag = flag;
+    }
 }
