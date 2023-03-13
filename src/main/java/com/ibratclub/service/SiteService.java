@@ -47,6 +47,21 @@ public class SiteService {
     private final CompanyRepository companyRepository;
     private final DepartmentRepository departmentRepository;
     private final AttachmentRepository attachmentRepository;
+    @SneakyThrows
+    public ResponseEntity<?> getQrCodeByUser(Long userid, HttpServletResponse response) {
+        Optional<User> userOptional = userRepository.findById(userid);
+        if (userOptional.isEmpty() || !userOptional.get().getDepartment().getId().equals(departmentId)) {
+            return ResponseEntity.badRequest().body("Request not found!!!");
+        }
+        response.setContentType("image/png");
+        byte[] qrCodeBytes = qrCodeService.generateQRCode(userOptional.get().getQrcode().toString(), 500, 500);
+        OutputStream outputStream = response.getOutputStream();
+        outputStream.write(qrCodeBytes);
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf("image/png"))
+                .contentLength(qrCodeBytes.length)
+                .body(qrCodeBytes);
+    }
 
     @SneakyThrows
     public ApiResponse<?> editPhoto(MultipartFile photo) {

@@ -46,7 +46,10 @@ public class SiteController {
         ApiResponse<List<Request>> response = siteService.getRequest();
         return ResponseEntity.status(response.getStatus()).body(response);
     }
-
+    @GetMapping("/getQrCodeByUser")
+    public ResponseEntity<?> getQrCodeByUser(@RequestParam Long userId, HttpServletResponse response){
+        return siteService.getQrCodeByUser(userId, response);
+    }
     @GetMapping("/district")
     public ResponseEntity<?> getAllDistrict(@RequestParam(required = false) Long regionId){
         ApiResponse<List<District>> response = addressService.getAllDistricts(regionId);
