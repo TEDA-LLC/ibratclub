@@ -88,37 +88,38 @@ public class SiteService {
         request.setRegisteredType(RegisteredType.WEBSITE);
         request.setAboutProduct(dto.getAboutProduct());
         request.setDateTime(LocalDateTime.now());
-
-        Optional<Product> productOptional = productRepository.findById(dto.getProductId());
-        if (productOptional.isEmpty() || !productOptional.get().getCategory().getDepartment().getId().equals(departmentId)) {
-            return ApiResponse.builder().
-                    message("Not found").
-                    success(false).
-                    status(400).
-                    build();
+        if(dto.getProductId() != null) {
+            Optional<Product> productOptional = productRepository.findById(dto.getProductId());
+            if (productOptional.isEmpty() || !productOptional.get().getCategory().getDepartment().getId().equals(departmentId)) {
+                return ApiResponse.builder().
+                        message("Not found").
+                        success(false).
+                        status(400).
+                        build();
+            }
+            Product product = productOptional.get();
+            request.setProduct(product);
         }
-        Product product = productOptional.get();
-        request.setProduct(product);
         if (dto.getCategory() != null) {
             request.setCategory(dto.getCategory());
         }
         else {
-            request.setCategory(product.getNameEn());
+            request.setCategory("");
         }
         ApiResponse<User> response = login(dto.getEmail(), dto.getPhone());
         if (!response.isSuccess()){
             return response;
         }
         User user = response.getData();
-        List<Request> requestList = requestRepository.findAllByProductAndUser(product, user);
-        if (!requestList.isEmpty()){
-            return ApiResponse.builder().
-                            message("Request was added !").
-                            status(200).
-                            success(true).
-                            data(requestList.get(0)).
-                            build();
-        }
+//        List<Request> requestList = requestRepository.findAllByProductAndUser(product, user);
+//        if (!requestList.isEmpty()){
+//            return ApiResponse.builder().
+//                            message("Request was added !").
+//                            status(200).
+//                            success(true).
+//                            data(requestList.get(0)).
+//                            build();
+//        }
 
 //        if (isPhone) {
 //            Optional<User> userOptionalByPhone = userRepository.findByPhoneAndCompany_Id(dto.getPhone(), companyId);
