@@ -95,12 +95,12 @@ public class DataLoader implements CommandLineRunner {
 //            messageRepository.save(message);
 //            count++;
 //            System.err.println("\n" + ++i + "\n");
-        List<User> all = userRepository.findAll();
-        for (User user : all) {
-            if (user.getQrcode() == null)
-                user.setQrcode(UUID.randomUUID());
-            userRepository.save(user);
-        }
+//        List<User> all = userRepository.findAll();
+//        for (User user : all) {
+//            if (user.getQrcode() == null)
+//                user.setQrcode(UUID.randomUUID());
+//            userRepository.save(user);
+//        }
     }
     }
 
